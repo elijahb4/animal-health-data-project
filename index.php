@@ -20,76 +20,22 @@
             integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
             crossorigin="anonymous"
         />
-        <style>
-        .sidebar {
-            height: 100vh;
-            position: fixed;
-            max-width: 200px;
-        }
-        .main-content {
-            margin-left: 16.666667%;
-        }
-        header.row {
-            height: 80px;
-            background-color: #f8f9fa;
-            margin-bottom: 20px;
-        }
-        .nav-header {
-            height: 80px;
-            padding: 1rem;
-            background-color: #f8f9fa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .nav-header img {
-            max-height: 60px;
-            width: auto;
-        }
-        .card {
-            margin-bottom: 1rem;
-        }
-        .card .row {
-            min-height: 200px;
-        }
-        .card .col-md-4 {
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card-img {
-            width: 100%;
-            height: auto;
-            max-height: 150px;
-            object-fit: contain;
-        }
-        .nav-header {
-            padding: 1rem;
-            background-color: #f8f9fa;
-        }
-        .position-sticky {
-            top: 60px;
-        }
-        .nav-link.active {
-            color: #0d6efd !important;
-            background-color: rgba(13, 110, 253, 0.1);
-            font-weight: 500;
-            border-radius: 0.25rem;
-        }
-        </style>
+        <!-- custom css (global styles)-->
+        <link
+            href="css/global.css"
+            rel="stylesheet"
+        />
     </head>
+    <!--html page content-->
     <body>
         <div class="container-fluid">
             <div class="row">
-                <header class="row">
+                <div id="header-container">
+                <?php include __DIR__ . '/components/header.php'; ?>
                     <!--<div class="col-md-3 col-lg-2 header-section d-flex align-items-center justify-content-center">
                         <h2>Logo/Brand</h2>
-                    </div>-->
-                    <div class="col-md-9 col-lg-10 d-flex align-items-center justify-content-center">
-                        <h2></h2>
-                    </div>
-                </header>
+                    </div>-->                    
+                </div>
                 <nav class="sidebar bg-light">
                     <div class="nav-header d-flex align-items-center justify-content-right">
                         <img
@@ -200,7 +146,6 @@
             </div>
         </div>
         <footer>
-            <!-- place footer here -->
         </footer>
         <!-- Bootstrap JavaScript Libraries -->
         <script
