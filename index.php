@@ -30,15 +30,8 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div id="header-container">
                 <?php include __DIR__ . '/components/header.php'; ?>
-                    <!--<div class="col-md-3 col-lg-2 header-section d-flex align-items-center justify-content-center">
-                        <h2>Logo/Brand</h2>
-                    </div>-->                    
-                </div>
-                <div id="navbar">
-                    <?php include __DIR__ . '/components/navbar_temp.php'; ?>
-                </div>
+                <?php include __DIR__ . '/components/navbar_temp.php'; ?>
                 <main class="col-md-10 main-content">
                     <div class="row">
                         <div class="col-12 col-md-6">
