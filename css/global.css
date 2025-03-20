@@ -48,9 +48,13 @@ header.row {
 .position-sticky {
     top: 60px;
 }
-.nav-link.active {
+h1{
+    text-align: center;
+}
+
+.nav-link:hover {
+    background-color: #95a5b6;
     color: #0d6efd !important;
-    background-color: rgba(13, 110, 253, 0.1);
-    font-weight: 500;
-    border-radius: 0.25rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(29, 26, 26, 0.1);
 }
