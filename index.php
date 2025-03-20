@@ -30,50 +30,8 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div id="header-container">
                 <?php include __DIR__ . '/components/header.php'; ?>
-                    <!--<div class="col-md-3 col-lg-2 header-section d-flex align-items-center justify-content-center">
-                        <h2>Logo/Brand</h2>
-                    </div>-->                    
-                </div>
-                <nav class="sidebar bg-light">
-                    <div class="nav-header d-flex align-items-center justify-content-right">
-                        <img
-                            src="assets/Elanco.svg"
-                            class="img-fluid"
-                            alt=""
-                        /> 
-                    </div>
-                    <div class="position-sticky pt-3">
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    Dashboard
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#">
-                                    Analytics
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    Our Dogs
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    Records
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    Health Data
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
+                <?php include __DIR__ . '/components/navbar_temp.php'; ?>
                 <main class="col-md-10 main-content">
                     <div class="row">
                         <div class="col-12 col-md-6">
@@ -146,6 +104,7 @@
             </div>
         </div>
         <footer>
+            <?php include __DIR__ . '/components/footer.php'; ?>
         </footer>
         <!-- Bootstrap JavaScript Libraries -->
         <script
