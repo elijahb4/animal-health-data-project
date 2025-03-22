@@ -2,7 +2,7 @@
 
 ?>
 <html>
-    <nav class="sidebar bg-light">
+    <nav class="sidebar">
                     <div class="nav-header d-flex align-items-center justify-content-right">
                         <img
                             src="../assets/Elanco.svg"
@@ -13,7 +13,7 @@
                     <div class="position-sticky pt-3">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="dashboard.php">
+                                <a class="nav-link" href="index.php">
                                     Dashboard
                                 </a>
                             </li>
