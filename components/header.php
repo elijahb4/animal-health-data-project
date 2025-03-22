@@ -1,19 +1,17 @@
-<?php
-?>
-<html>
-<header>
-        <header class="row">
-        <div class="col-md-9 col-lg-10 d-flex align-items-center ">
-                <div class="col-md-6 main-content">
-                <form class="d-flex align-items-center gap-2">
-                    <input type="search" class="form-control form-control-lg" placeholder="Search our records..." />
-                    <button type="submit" class="btn btn-primary btn-lg">Search</button>
-                </form>
-                </div>
-                <div class="justify-content-right">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/header.css">
+<div class="header">
+    <div class="search-bar">
+        <img src="assets/header/search.png" class="search-icon" alt="Search">
+        <input type="text" placeholder="Search our records...">
+    </div>
 
-                </div>
+    <div class="header-icons">
+        <div class="icon-wrapper">
+            <img src="assets/header/notification.png" class="icon" alt="Notifications" />
         </div>
-        </header>
-</header>
-</html>
+        <div class="icon-wrapper">
+            <img src="assets/header/user.png" class="icon" alt="Account" />
+        </div>
+    </div>
+</div>

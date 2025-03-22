@@ -1,1 +1,125 @@
-/* hallo*/
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    background: linear-gradient(to bottom, #1A2350, #101530);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.sidebar .logo {
+    background-color: #0E1A40;
+    gap: 20px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.sidebar .logo img.logo-icon {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+}
+
+.sidebar .logo img.logo-text {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+}
+
+.sidebar .nav {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0 0;
+    flex-grow: 1;
+}
+
+.sidebar .nav li {
+    position: relative;
+    margin: 8px 0;
+    transition: all 0.25s ease;
+}
+
+.sidebar .nav li a {
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    display: block;
+    padding: 12px 24px;
+}
+
+.sidebar .nav li.active {
+    background-color: #0a5ea8;
+    border-radius: 20px 0 0 20px;
+    width: 100%;
+    transition: background-color 0.3s ease, margin-left 0.3s ease;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        margin-left: -10px;
+        opacity: 0;
+    }
+    to {
+        margin-left: 0;
+        opacity: 1;
+    }
+}
+
+.sidebar .nav li.active a {
+    color: white;
+}
+
+.sidebar .nav li:hover a {
+    font-weight: 700;
+    transform: translateX(6px) scale(1.02);
+    box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.3);
+    border-radius: 20px 0 0 20px;
+}
+
+.sidebar .nav li:hover,
+.sidebar .settings-link li:hover {
+    background-color: #24306d;
+    box-shadow: inset 0 0 0 1000px rgba(247, 0, 255, 0.3);
+}
+
+.sidebar .settings-link li a {
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    display: block;
+    padding: 12px 24px;
+}
+
+.sidebar .settings-link {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-top: auto;
+    padding: 8px 0;
+    background-color: #141B3D;
+}
+
+.sidebar .settings-link li {
+    margin-left: 0;
+}
+
+.sidebar .settings-link li.active {
+    background-color: #0a5ea8;
+    border-radius: 25px 0 0 25px;
+    width: 100%;
+}
+
+.sidebar .settings-link li:hover a {
+    font-weight: 700;
+}
