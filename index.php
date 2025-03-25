@@ -8,16 +8,20 @@
     <link rel="stylesheet" href="css/footer.css">
 </head>
 <body>
+  <div class="layout">
     <?php include 'components/sidebar.php'; ?>
-    <?php include 'components/header.php'; ?>
+    <div class="content-area">
+      <?php include 'components/header.php'; ?>
 
-    <main>
+      <main>
         <?php
-        $page = $_GET['page'] ?? 'dashboard';
-        include "views/$page.php";
+          $page = $_GET['page'] ?? 'dashboard';
+          include "views/$page.php";
         ?>
-    </main>
+      </main>
 
-    <?php include 'components/footer.php'; ?>
+      <?php include 'components/footer.php'; ?>
+    </div>
+  </div>
 </body>
 </html>
