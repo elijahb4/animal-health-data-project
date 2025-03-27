@@ -13,8 +13,8 @@
 
     <main>
         <?php
-        //$page = $_GET['page'] ?? 'dashboard';
-        //include "views/$page.php";
+        $page = $_GET['page'] ?? 'dashboard';
+        include "views/$page.php";
         ?>
     </main>
 

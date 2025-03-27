@@ -1,27 +1,74 @@
 <?php
-$file = fopen('animal-health-data-project/database/activityData.csv', 'r');
+
+//function GetDogs () {
+
+ob_start();
+
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Disable error display for JSON output
+
+if (!file_exists(__DIR__ . '/database/activityData.csv')) {
+    header('Content-Type: application/json');
+    die(json_encode(['error' => 'CSV file not found']));
+}
+
+$file = fopen(__DIR__ . '/database/activityData.csv', 'r');
+if ($file === false) {
+    header('Content-Type: application/json');
+    die(json_encode(['error' => 'Unable to open file']));
+}
 
 $header = fgetcsv($file);
+if ($header === false) {
+    header('Content-Type: application/json');
+    die(json_encode(['error' => 'Invalid CSV format']));
+}
 
-$dogIndex = array_search('DogID', $header);
-
-// Array to store unique city values
-$dogArray = [];
-
-// Loop through the remaining rows
-while (($data = fgetcsv($file)) !== FALSE) {
-    // Get the city value
-    $dog = $data[$dogIndex];
-
-    // Add the city to the array if it's not already present
-    if (!in_array($dog, $dogArray)) {
-        $dogArray[] = $dog;
+$dogIndex = -1;
+foreach ($header as $index => $column) {
+    if ($column === 'DogID') {
+        $dogIndex = $index;
+        break;
     }
 }
 
-// Close the file
+if ($dogIndex === -1) {
+    header('Content-Type: application/json');
+    die(json_encode(['error' => 'DogID column not found']));
+}
+
+$dogArray = [];
+
+while (($data = fgetcsv($file, 0, ",", '"', "\\")) !== FALSE) {
+    if (isset($data[$dogIndex])) {
+        $dog = $data[$dogIndex];
+        $found = false;
+        foreach ($dogArray as $existingDog) {
+            if ($existingDog === $dog) {
+                $found = true;
+                break;
+            }
+        }
+        if (!$found) {
+            $dogArray[] = $dog;
+        }
+    }
+}
+
 fclose($file);
 
+while (ob_get_level()) {
+    ob_end_clean();
+}
+
 header('Content-Type: application/json');
-echo json_encode($dogArray);
-?>
+header('Cache-Control: no-cache');
+
+$json = json_encode($dogArray);
+if ($json === false) {
+    die(json_encode(['error' => 'JSON encoding failed: ' . json_last_error_msg()]));
+}
+return $json;
+echo $json;
+exit();
+//}
