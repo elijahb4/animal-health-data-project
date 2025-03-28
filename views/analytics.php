@@ -1,7 +1,4 @@
 <?php
-//require __DIR__ . '/../getDogs.php'
-
-
 
 ?>
 <html>

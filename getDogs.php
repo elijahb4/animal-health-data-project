@@ -1,7 +1,4 @@
 <?php
-
-//function GetDogs () {
-
 ob_start();
 
 error_reporting(E_ALL);
@@ -68,7 +65,5 @@ $json = json_encode($dogArray);
 if ($json === false) {
     die(json_encode(['error' => 'JSON encoding failed: ' . json_last_error_msg()]));
 }
-return $json;
 echo $json;
 exit();
-//}
