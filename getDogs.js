@@ -1,14 +1,14 @@
-let xhr = new XMLHttpRequest();
+let zhr = new XMLHttpRequest();
 
-xhr.open('GET', 'getDogs.php', true);
-xhr.setRequestHeader('Accept', 'application/json');
+zhr.open('GET', 'getDogs.php', true);
+zhr.setRequestHeader('Accept', 'application/json');
 
-xhr.onload = function () {
-    if (xhr.readyState === xhr.DONE) {
-        if (xhr.status === 200) {
+zhr.onload = function () {
+    if (zhr.readyState === zhr.DONE) {
+        if (zhr.status === 200) {
         let response;
     try {
-        response = JSON.parse(xhr.responseText);
+        response = JSON.parse(zhr.responseText);
 
         const selectElement = document.getElementById('selectDog');
 
@@ -25,4 +25,4 @@ xhr.onload = function () {
     }}     
 }
 
-xhr.send();
+zhr.send();
