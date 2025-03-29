@@ -2,6 +2,11 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
+$columns = isset($_GET['columns']) ? json_decode($_GET['columns'], true) : null;
+if (!$columns) {
+    die(json_encode(['error' => 'No columns specified']));
+}
+
 if (!file_exists(__DIR__ . '/database/activityData.csv')) {
     header('Content-Type: application/json');
     die(json_encode(['error' => 'CSV file not found']));
@@ -19,10 +24,8 @@ if ($header === false) {
     die(json_encode(['error' => 'Invalid CSV format']));
 }
 
-$wanted_columns = ['DogID', 'Activity Level', 'Heart Rate']; // modify these as needed
 $column_indexes = [];
-
-foreach ($wanted_columns as $column) {
+foreach ($columns as $column) {
     $index = array_search($column, $header);
     if ($index !== false) {
         $column_indexes[$column] = $index;

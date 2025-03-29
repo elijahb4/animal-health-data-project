@@ -17,7 +17,7 @@ xhr.onload = function () {
             option.value = dog;
             option.textContent = dog;
             selectElement.appendChild(option);
-        })
+        });
     }
     catch (e) {
         console.error("Parsing Error");

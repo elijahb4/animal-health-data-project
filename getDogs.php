@@ -1,8 +1,6 @@
 <?php
-ob_start();
-
-error_reporting(E_ALL);
-ini_set('display_errors', 0); // Disable error display for JSON output
+header('Content-Type: application/json');
+header('Cache-Control: no-cache');
 
 if (!file_exists(__DIR__ . '/database/activityData.csv')) {
     header('Content-Type: application/json');
@@ -57,9 +55,6 @@ fclose($file);
 while (ob_get_level()) {
     ob_end_clean();
 }
-
-header('Content-Type: application/json');
-header('Cache-Control: no-cache');
 
 $json = json_encode($dogArray);
 if ($json === false) {
