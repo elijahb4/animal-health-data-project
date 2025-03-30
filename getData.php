@@ -2,10 +2,8 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-$columns = isset($_GET['columns']) ? json_decode($_GET['columns'], true) : null;
-if (!$columns) {
-    die(json_encode(['error' => 'No columns specified']));
-}
+$columnId = $_GET['columnId'];
+$columns = json_decode($_GET['columns']);
 
 if (!file_exists(__DIR__ . '/database/activityData.csv')) {
     header('Content-Type: application/json');
