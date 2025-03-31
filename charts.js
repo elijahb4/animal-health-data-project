@@ -1,12 +1,24 @@
 //Async function variables
 let xhr = new XMLHttpRequest();
 let yhr = new XMLHttpRequest();
+let myChart = null;
 
 //Varaibles for html elements
 const queryForm = document.getElementById("dataQuery")
 const selectColumn = document.getElementById("dataSelect");
 const selectElement = document.getElementById('selectDog');
 const ctx = document.getElementById('myChart').getContext('2d');
+const chatTypes = ['bar','line','bubble','doughnut','pie','polarArea','radar','scatter'];
+const chartTypeSelect = document.getElementById("chartTypes")
+
+function populate_chartTypes() {
+    chatTypes.forEach(chartType => {
+        const option = document.createElement('option');
+        option.value = chartType;
+        option.textContent = chartType;
+        chartTypeSelect.appendChild(option);
+    })
+}
 
 let columnsToFetch = ['Hour'];
 
@@ -19,8 +31,9 @@ function queryData(event) {
     selectedColumns.forEach(column => {
         columnsToFetch.push(column);
     });
+    const dogId = selectElement.value;
     let params = new URLSearchParams({
-        columnId: 'CANINE001',
+        DogID: dogId,
         columns: JSON.stringify(columnsToFetch)
     });
     labelKey = columnsToFetch;
@@ -47,18 +60,31 @@ xhr.onload = function (selectColumnValue) {
 }
 
 function makeChart(ctx, response, selectedColumn) {
+    if (myChart) {
+        myChart.destroy();
+    }
+    const chartTypeValue = chartTypeSelect.value;
     const labels = response.map(item => item['Hour']);
-    const data = response.map(item => parseFloat(item[selectedColumn]));
-    const myChart = new Chart(ctx, {
-    type: 'line', //Update to be a variable not hardcoded to allow user selection
+    const data = response.map(item => {
+        const value = item[selectedColumn];
+        return isNaN(value) ? value : parseFloat(value);
+    });
+    myChart = new Chart(ctx, {
+    type: chartTypeValue,
     data: {
       labels: labels,
       datasets: [{
         label: `Data for ${selectedColumn}`,
         data: data,
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1
+        backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(54, 162, 235)',
+            'rgb(153, 102, 255)',
+            'rgb(201, 203, 207)'
+        ],
         }]
     }      
     }
@@ -92,3 +118,4 @@ yhr.onload = function () {
 }
 
 yhr.send();
+populate_chartTypes();

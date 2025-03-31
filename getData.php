@@ -2,7 +2,8 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-$columnId = $_GET['columnId'];
+//$columnId = $_GET['columnId'];
+$dogId = $_GET['DogID'];
 $columns = json_decode($_GET['columns']);
 
 if (!file_exists(__DIR__ . '/database/activityData.csv')) {
@@ -23,6 +24,7 @@ if ($header === false) {
 }
 
 $column_indexes = [];
+$dogId_index = array_search('DogID', $header);
 foreach ($columns as $column) {
     $index = array_search($column, $header);
     if ($index !== false) {
@@ -33,11 +35,13 @@ foreach ($columns as $column) {
 $data = [];
 
 while (($row = fgetcsv($file, 0, ',', '"', '\\')) !== FALSE) {
-    $filtered_row = [];
-    foreach ($column_indexes as $column => $index) {
-        $filtered_row[$column] = $row[$index];
-    }
+    if ($row[$dogId_index] === $dogId) {
+        $filtered_row = [];
+        foreach ($column_indexes as $column => $index) {
+            $filtered_row[$column] = $row[$index];
+        }
     $data[] = $filtered_row;
+    }
 }
 
 fclose($file);
