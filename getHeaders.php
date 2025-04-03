@@ -19,3 +19,4 @@ if ($header === false) {
 fclose($file);
 echo json_encode($header);
 exit();
+?>

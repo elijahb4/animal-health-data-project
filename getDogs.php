@@ -62,3 +62,4 @@ if ($json === false) {
 }
 echo $json;
 exit();
+?>
