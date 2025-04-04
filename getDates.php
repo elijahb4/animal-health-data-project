@@ -17,20 +17,21 @@ $maxDate = null;
 $firstRow = true;
 $dateArray = [];
 
-    while (($data = fgetcsv($handle, 1000, ",", '"', '\\')) !== FALSE) {
+    while (($data = fgetcsv($file, 1000, ",", '"', '\\')) !== FALSE) {
         if ($firstRow) {
             $firstRow = false;
             continue;
         }
         $datetext = $data[$dateColumn];
-
-        $dateTime = new DateTime($date);
-
-        if ($minDate === null || $dateTime < $minDate) {
-            $minDate = clone $dateTime;
+        if (empty($datetext)) {
+            continue;
         }
-        if ($maxDate === null || $dateTime > $maxDate) {
-            $maxDate = clone $dateTime;
+        $dateTime = new DateTime($datetext);
+
+        if ($minDate && $maxDate) {
+            echo json_encode([$minDate->format('Y-m-d'), $maxDate->format('Y-m-d')]);
+        } else {
+            echo json_encode(['error' => 'No valid dates found']);
         }
     }
 
