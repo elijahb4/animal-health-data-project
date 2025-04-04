@@ -11,12 +11,18 @@ if ($file === false) {
     die(json_encode(['error' => 'Unable to open file']));
 }
 
-$dateColumn = 'Date';
+$dateColumn = 2;
 $minDate = null;
 $maxDate = null;
+$firstRow = true;
+$dateArray = [];
 
-    while (($data = fgetcsv($file, 1000, ",")) !== FALSE) {
-        $date = $data[$dateColumn];
+    while (($data = fgetcsv($handle, 1000, ",", '"', '\\')) !== FALSE) {
+        if ($firstRow) {
+            $firstRow = false;
+            continue;
+        }
+        $datetext = $data[$dateColumn];
 
         $dateTime = new DateTime($date);
 
@@ -28,7 +34,8 @@ $maxDate = null;
         }
     }
 
+array_push($dateArray, $minDate, $maxDate);
 fclose($file);
-echo json_encode($header);
+echo json_encode($dateArray);
 exit();
 ?>

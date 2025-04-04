@@ -1,6 +1,7 @@
 //Async function variables
 let xhr = new XMLHttpRequest();
 let yhr = new XMLHttpRequest();
+let vhr = new XMLHttpRequest();
 let myChart = null;
 
 //Varaibles for html elements
@@ -18,6 +19,12 @@ function populate_chartTypes() {
         option.textContent = chartType;
         chartTypeSelect.appendChild(option);
     })
+}
+
+function setDateRange(minDate, maxDate) {
+    const datePicker = document.getElementById('datePicker');
+    datePicker.min = minDate;
+    datePicker.max = maxDate;
 }
 
 let columnsToFetch = ['Hour'];
@@ -92,6 +99,28 @@ function makeChart(ctx, response, selectedColumn) {
       return myChart;
     }
 
+vhr.open('GET', 'getDates.php', true)
+vhr.setRequestHeader('Accept','application.json')
+vhr.onload = function () {
+    if (vhr.readyState === vhr.DONE) {
+        if (yhr.status === 200) {
+        let response;
+        try {
+            console.log('Raw response:', yhr.responseText);
+            response = JSON.parse(yhr.responseText);
+            console.log(response)
+            const minDate = response[0];
+            const maxDate = response[0];
+            setDateRange(minDate, maxDate);
+        }
+        catch (e) {
+            console.error(e.message);
+            console.error("Parsing Error", yhr.status);
+        }
+        }
+    }
+}
+
 yhr.open('GET', 'getHeaders.php', true);
 yhr.setRequestHeader('Accept', 'application.json')
 
@@ -117,5 +146,6 @@ yhr.onload = function () {
     }}     
 }
 
+vhr.send();
 yhr.send();
 populate_chartTypes();

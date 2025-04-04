@@ -44,6 +44,7 @@ while (($row = fgetcsv($file, 0, ',', '"', '\\')) !== FALSE) {
     }
 }
 
+var_dump($data);
 fclose($file);
 echo json_encode($data);
 exit();
