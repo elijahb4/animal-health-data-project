@@ -90,7 +90,7 @@ function makeChart(ctx, response, selectedColumn) {
     }
       );
       return myChart;
-    }
+}
 
 yhr.open('GET', 'getHeaders.php', true);
 yhr.setRequestHeader('Accept', 'application.json')
