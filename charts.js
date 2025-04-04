@@ -97,7 +97,7 @@ function makeChart(ctx, response, selectedColumn) {
     }
       );
       return myChart;
-    }
+}
 
 vhr.open('GET', 'getDates.php', true)
 vhr.setRequestHeader('Accept','application.json')
