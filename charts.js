@@ -1,16 +1,26 @@
 //Async function variables
 let xhr = new XMLHttpRequest();
 let yhr = new XMLHttpRequest();
-let vhr = new XMLHttpRequest();
 let myChart = null;
+let minDate = null;
+let maxDate = null;
+
+fetchDates();
 
 //Varaibles for html elements
 const queryForm = document.getElementById("dataQuery")
 const selectColumn = document.getElementById("dataSelect");
 const selectElement = document.getElementById('selectDog');
+const datePicker = document.getElementById('datePicker');
 const ctx = document.getElementById('myChart').getContext('2d');
 const chatTypes = ['bar','line','bubble','doughnut','pie','polarArea','radar','scatter'];
-const chartTypeSelect = document.getElementById("chartTypes")
+const chartTypeSelect = document.getElementById("chartTypes");
+let queryDate = new Date(datePicker.value);
+queryForm.addEventListener("submit", queryData);
+datePicker.addEventListener("change", function () {
+    queryDate = new Date(datePicker.value);
+    console.log("Selected date:", queryDate);
+});
 
 function populate_chartTypes() {
     chatTypes.forEach(chartType => {
@@ -22,18 +32,18 @@ function populate_chartTypes() {
 }
 
 function setDateRange(minDate, maxDate) {
-    const datePicker = document.getElementById('datePicker');
     datePicker.min = minDate;
     datePicker.max = maxDate;
 }
 
 let columnsToFetch = ['Hour'];
 
-queryForm.addEventListener("submit", queryData)
-
 function queryData(event) {
     event.preventDefault();
-
+    if (queryDate < minDate || queryDate > maxDate) {
+        alert("Please select a date within the range.");
+        return;
+    }
     const selectedColumns = Array.isArray(selectColumn.value)
         ? selectColumn.value
         : [selectColumn.value];
@@ -139,26 +149,32 @@ function makeChart(ctx, response, selectedColumn) {
     return myChart;
 }
 
-vhr.open('GET', 'getDates.php', true)
-vhr.setRequestHeader('Accept','application.json')
-vhr.onload = function () {
-    if (vhr.readyState === vhr.DONE) {
-        if (yhr.status === 200) {
-        let response;
-        try {
-            console.log('Raw response:', yhr.responseText);
-            response = JSON.parse(yhr.responseText);
-            console.log(response)
-            const minDate = response[0];
-            const maxDate = response[1];
-            setDateRange(minDate, maxDate);
-        }
-        catch (e) {
-            console.error(e.message);
-            console.error("Parsing Error", yhr.status);
-        }
-        }
+async function fetchDates() {
+    try {
+      const response = await fetch('getDates.php');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      if (data.error) {
+        console.error('Error:', data.error);
+        alert(`Error: ${data.error}`);
+      } else {
+        console.log('Min Date:', data.minDate);
+        console.log('Max Date:', data.maxDate);
+        minDate = formatDateToISO(data.minDate);
+        maxDate = formatDateToISO(data.maxDate);
+        setDateRange(minDate, maxDate);
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      alert('An error occurred while fetching the data.');
     }
+}
+
+function formatDateToISO(dateString) {
+    const [day, month, year] = dateString.split("-");
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 }
 
 yhr.open('GET', 'getHeaders.php', true);
@@ -186,6 +202,5 @@ yhr.onload = function () {
     }}     
 }
 
-vhr.send();
 yhr.send();
 populate_chartTypes();

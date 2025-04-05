@@ -2,6 +2,12 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
+function writeLog($message) {
+    $logFile = __DIR__ . '/debug.log';
+    $timestamp = date('Y-m-d H:i:s');
+    file_put_contents($logFile, "[$timestamp] $message\n", FILE_APPEND);
+}
+
 if (!file_exists(__DIR__ . '/database/activityData.csv')) {
     die(json_encode(['error' => 'CSV file not found']));
 }
@@ -15,28 +21,38 @@ $dateColumn = 2;
 $minDate = null;
 $maxDate = null;
 $firstRow = true;
-$dateArray = [];
 
-    while (($data = fgetcsv($file, 1000, ",", '"', '\\')) !== FALSE) {
-        if ($firstRow) {
-            $firstRow = false;
-            continue;
-        }
-        $datetext = $data[$dateColumn];
-        if (empty($datetext)) {
-            continue;
-        }
-        $dateTime = new DateTime($datetext);
-
-        if ($minDate && $maxDate) {
-            echo json_encode([$minDate->format('Y-m-d'), $maxDate->format('Y-m-d')]);
-        } else {
-            echo json_encode(['error' => 'No valid dates found']);
-        }
+while (($data = fgetcsv($file, 1000, ",", '"', '\\')) !== false) {
+    if ($firstRow) {
+        writeLog("Header row: " . implode(',', $data));
+        $firstRow = false;
+        continue;
     }
+    writeLog("Processing row: " . implode(',', $data));
+    $datetext = $data[$dateColumn] ?? null;
+    if (empty($datetext)) {
+        continue;
+    }
+    $currentDate = DateTime::createFromFormat('d-m-Y', $datetext);
+    if ($currentDate === false) {
+        continue;
+    }
+    if ($minDate === null || $currentDate < $minDate) {
+        $minDate = $currentDate;
+    }
+    if ($maxDate === null || $currentDate > $maxDate) {
+        $maxDate = $currentDate;
+    }
+}
 
-array_push($dateArray, $minDate, $maxDate);
+if ($minDate && $maxDate) {
+    echo json_encode([
+        'minDate' => $minDate->format('d-m-Y'),
+        'maxDate' => $maxDate->format('d-m-Y')
+    ]);
+} else {
+    echo json_encode(['error' => 'No valid dates found']);
+}
 fclose($file);
-echo json_encode($dateArray);
 exit();
 ?>
