@@ -2,41 +2,55 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-if (!file_exists(__DIR__ . '/database/activityData.csv')) {
-    die(json_encode(['error' => 'CSV file not found']));
+$csvPath = __DIR__ . '/database/activityData.csv';
+
+if (!file_exists($csvPath)) {
+    echo json_encode(['error' => 'CSV file not found']);
+    exit();
 }
 
-$file = fopen(__DIR__ . '/database/activityData.csv', 'r');
+$file = fopen($csvPath, 'r');
 if ($file === false) {
-    die(json_encode(['error' => 'Unable to open file']));
+    echo json_encode(['error' => 'Unable to open file']);
+    exit();
 }
 
 $dateColumn = 2;
 $minDate = null;
 $maxDate = null;
 $firstRow = true;
-$dateArray = [];
 
-    while (($data = fgetcsv($file, 1000, ",", '"', '\\')) !== FALSE) {
-        if ($firstRow) {
-            $firstRow = false;
-            continue;
-        }
-        $datetext = $data[$dateColumn];
-        if (empty($datetext)) {
-            continue;
-        }
-        $dateTime = new DateTime($datetext);
-
-        if ($minDate && $maxDate) {
-            echo json_encode([$minDate->format('Y-m-d'), $maxDate->format('Y-m-d')]);
-        } else {
-            echo json_encode(['error' => 'No valid dates found']);
-        }
+while (($data = fgetcsv($file, 1000, ",", '"', '\\')) !== false) {
+    if ($firstRow) {
+        $firstRow = false;
+        continue;
     }
 
-array_push($dateArray, $minDate, $maxDate);
+    $dateText = $data[$dateColumn] ?? '';
+    if (empty($dateText)) continue;
+
+    try {
+        $date = new DateTime($dateText);
+        if (is_null($minDate) || $date < $minDate) {
+            $minDate = $date;
+        }
+        if (is_null($maxDate) || $date > $maxDate) {
+            $maxDate = $date;
+        }
+    } catch (Exception $e) {
+        continue;
+    }
+}
+
 fclose($file);
-echo json_encode($dateArray);
+
+if ($minDate && $maxDate) {
+    echo json_encode([
+        'minDate' => $minDate->format('d-m-Y'),
+        'maxDate' => $maxDate->format('d-m-Y')
+    ]);
+} else {
+    echo json_encode(['error' => 'No valid dates found']);
+}
 exit();
 ?>

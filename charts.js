@@ -1,8 +1,11 @@
-//Async function variables
+//AJAX function variables
 let xhr = new XMLHttpRequest();
 let yhr = new XMLHttpRequest();
-let vhr = new XMLHttpRequest();
+
+//General variables
 let myChart = null;
+let columnsToFetch = ['Hour'];
+let queryDate = null;
 
 //Varaibles for html elements
 const queryForm = document.getElementById("dataQuery")
@@ -10,8 +13,13 @@ const selectColumn = document.getElementById("dataSelect");
 const selectElement = document.getElementById('selectDog');
 const ctx = document.getElementById('myChart').getContext('2d');
 const chatTypes = ['bar','line','bubble','doughnut','pie','polarArea','radar','scatter'];
-const chartTypeSelect = document.getElementById("chartTypes")
+const chartTypeSelect = document.getElementById("chartTypes");
+const datePicker = document.getElementById("datePicker");
 
+//Event listeners
+queryForm.addEventListener("submit", queryData)
+
+//invoked immediately to populate the chart types
 function populate_chartTypes() {
     chatTypes.forEach(chartType => {
         const option = document.createElement('option');
@@ -21,24 +29,75 @@ function populate_chartTypes() {
     })
 }
 
+//Invoked immediately (via fetchDates()) to set the range of the date picker
 function setDateRange(minDate, maxDate) {
     const datePicker = document.getElementById('datePicker');
     datePicker.min = minDate;
     datePicker.max = maxDate;
 }
 
-let columnsToFetch = ['Hour'];
+//Invoked via fetchDates() to format the date from the database to ISO format (They are dd-mm-yyyy in the CSV file)
+function formatDateToISO(dateString) {
+    const [day, month, year] = dateString.split("-");
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+}
 
-queryForm.addEventListener("submit", queryData)
+//invoked immediately to fetch the min and max dates from the database
+async function fetchDates() {
+    try {
+        const response = await fetch('getDates.php');
+        const data = await response.json();
 
+        if (data.error) {
+            console.error(data.error);
+            alert(data.error);
+        } else {
+            const minDate = formatDateToISO(data.minDate);
+            const maxDate = formatDateToISO(data.maxDate);
+            setDateRange(minDate, maxDate);
+        }
+    } catch (err) {
+        console.error('Fetch error:', err);
+    }
+}
+
+
+//Invoked immediately to populate the select column with the headers from the database
+yhr.open('GET', 'getHeaders.php', true);
+yhr.setRequestHeader('Accept', 'application.json')
+yhr.onload = function () {
+    if (yhr.readyState === yhr.DONE) {
+        if (yhr.status === 200) {
+        let response;
+    try {
+        console.log('Raw response:', yhr.responseText);
+        response = JSON.parse(yhr.responseText);
+        console.log(response)
+        response.forEach(column => {
+            const option = document.createElement('option');
+            option.value = column;
+            option.textContent = column;
+            selectColumn.appendChild(option);
+        })
+    }
+    catch (e) {
+        console.error(e.message);
+        console.error("Parsing Error", yhr.status);
+    }
+    }}     
+}
+
+//Function invoked by the event listener when user sumbits the form, it handles form input and calls the php code to get the data required
 function queryData(event) {
     event.preventDefault();
-
+    /*if (minDate > queryDate || queryDate > maxDate) {
+        alert("Please select a date within the range provided.");
+        return;
+    }*/
     const selectedColumns = Array.isArray(selectColumn.value)
         ? selectColumn.value
         : [selectColumn.value];
 
-    // Reset global storage if needed
     columnsToFetch = [];
 
     selectedColumns.forEach(column => {
@@ -63,6 +122,7 @@ function queryData(event) {
     xhr.send();
 }
 
+//Function to call and handle the response from the server
 xhr.onload = function (selectColumnValue) {
     if (xhr.readyState === xhr.DONE) {
         if (xhr.status === 200) {
@@ -71,7 +131,6 @@ xhr.onload = function (selectColumnValue) {
         const response = JSON.parse(xhr.responseText);
         console.log('Response:', response);
         console.log('Columns to fetch:', columnsToFetch);
-
         makeChart(ctx, response, columnsToFetch[0]);
     }
     catch (e) {
@@ -81,6 +140,7 @@ xhr.onload = function (selectColumnValue) {
     }}     
 }
 
+//Function to create the chart using Chart.js
 function makeChart(ctx, response, selectedColumn) {
     console.log('Chart column:', selectedColumn);
     console.log('Sample data row:', response[0]);
@@ -94,22 +154,21 @@ function makeChart(ctx, response, selectedColumn) {
     let labels = [];
     let data = [];
 
-    // Check if selectedColumn contains numeric data or categorical data
+    //This section checks if the selected column is numeric or categorical
     const isNumeric = response.every(item => !isNaN(parseFloat(item[selectedColumn])));
-
     if (!isNumeric) {
-        // Categorical column: Count occurrences
+        //Categorical Data
         const counts = response.reduce((acc, item) => {
             const value = item[selectedColumn];
             acc[value] = (acc[value] || 0) + 1;
             return acc;
         }, {});
 
-        labels = Object.keys(counts); // Unique values
-        data = Object.values(counts); // Count of each category
+        labels = Object.keys(counts);
+        data = Object.values(counts);
     } else {
-        // Numeric column: Directly use values
-        labels = response.map(item => item['Hour']); // Use "Hour" as labels
+        //Numeric Data
+        labels = response.map(item => item['Hour']);
         const data = response.map(item => item[selectedColumn]);
     }
 
@@ -139,53 +198,6 @@ function makeChart(ctx, response, selectedColumn) {
     return myChart;
 }
 
-vhr.open('GET', 'getDates.php', true)
-vhr.setRequestHeader('Accept','application.json')
-vhr.onload = function () {
-    if (vhr.readyState === vhr.DONE) {
-        if (yhr.status === 200) {
-        let response;
-        try {
-            console.log('Raw response:', yhr.responseText);
-            response = JSON.parse(yhr.responseText);
-            console.log(response)
-            const minDate = response[0];
-            const maxDate = response[1];
-            setDateRange(minDate, maxDate);
-        }
-        catch (e) {
-            console.error(e.message);
-            console.error("Parsing Error", yhr.status);
-        }
-        }
-    }
-}
-
-yhr.open('GET', 'getHeaders.php', true);
-yhr.setRequestHeader('Accept', 'application.json')
-
-yhr.onload = function () {
-    if (yhr.readyState === yhr.DONE) {
-        if (yhr.status === 200) {
-        let response;
-    try {
-        console.log('Raw response:', yhr.responseText);
-        response = JSON.parse(yhr.responseText);
-        console.log(response)
-        response.forEach(column => {
-            const option = document.createElement('option');
-            option.value = column;
-            option.textContent = column;
-            selectColumn.appendChild(option);
-        })
-    }
-    catch (e) {
-        console.error(e.message);
-        console.error("Parsing Error", yhr.status);
-    }
-    }}     
-}
-
-vhr.send();
 yhr.send();
+fetchDates();
 populate_chartTypes();
