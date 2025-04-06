@@ -7,7 +7,7 @@ let myChart = null;
 let columnsToFetch = ['Hour'];
 let queryDate = null;
 
-//Varaibles for html elements
+//Varaibles (*varialbls) for html elements
 const queryForm = document.getElementById("dataQuery")
 const selectColumn = document.getElementById("dataSelect");
 const selectElement = document.getElementById('selectDog');
@@ -34,6 +34,7 @@ function setDateRange(minDate, maxDate) {
     const datePicker = document.getElementById('datePicker');
     datePicker.min = minDate;
     datePicker.max = maxDate;
+    datePicker.value = maxDate; // default date is the latest entry in csv
 }
 
 //Invoked via fetchDates() to format the date from the database to ISO format (They are dd-mm-yyyy in the CSV file)
@@ -107,8 +108,13 @@ function queryData(event) {
     });
 
     const dogId = selectElement.value;
+    const selectedDate = datePicker.value; // date thingy
+    const rangeDays = document.getElementById("rangeDays").value; // day range thingy
+
     const params = new URLSearchParams();
     params.append('DogID', dogId);
+    params.append('Date', selectedDate);
+    params.append('rangeDays', rangeDays);
 
     columnsToFetch.forEach(col => {
         params.append('columns[]', col);
@@ -169,7 +175,7 @@ function makeChart(ctx, response, selectedColumn) {
     } else {
         //Numeric Data
         labels = response.map(item => item['Hour']);
-        const data = response.map(item => item[selectedColumn]);
+        data = response.map(item => item[selectedColumn]);
     }
 
     console.log("Chart Labels:", labels);

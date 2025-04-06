@@ -2,15 +2,16 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
-// Get values from GET request
+// get values from GET request
 $dogID = $_GET['DogID'] ?? '';
 $columns = $_GET['columns'] ?? [];
+$date = $_GET['Date'] ?? '';
 
 if (!is_array($columns)) {
-    $columns = [$columns]; // Ensure it's always an array
+    $columns = [$columns]; // ensure it's always an array
 }
 
-// File path
+// file path
 $csvPath = __DIR__ . '/database/activityData.csv';
 
 if (!file_exists($csvPath)) {
@@ -24,16 +25,18 @@ if ($file === false) {
     exit();
 }
 
-// Get headers
+// get headers
 $header = fgetcsv($file, 0, ',', '"', '\\');
 if ($header === false) {
     echo json_encode(['error' => 'Invalid CSV format']);
     exit();
 }
 
-// Map requested column names to their indexes
+// map requested column names to their indexes
 $column_indexes = [];
 $dogId_index = array_search('DogID', $header);
+$date_index = array_search('Date', $header);
+$hour_index = array_search('Hour', $header);
 
 foreach ($columns as $column) {
     $index = array_search($column, $header);
@@ -42,20 +45,31 @@ foreach ($columns as $column) {
     }
 }
 
-// Filter data by DogID and selected columns
+// filter data by DogID and date
 $data = [];
-
 while (($row = fgetcsv($file, 0, ',', '"', '\\')) !== false) {
-    if ($row[$dogId_index] === $dogID) {
+    $matchesDog = $row[$dogId_index] === $dogID;
+    // $matchesDate = $date ? ($row[$date_index] === date("d-m-Y", strtotime($date))) : true;
+
+    $rangeDays = isset($_GET['rangeDays']) ? intval($_GET['rangeDays']) : 1;
+    $startTimestamp = strtotime($date);
+    $endTimestamp = strtotime("+$rangeDays days", $startTimestamp);
+
+    $rowTimestamp = strtotime(str_replace('/', '-', $row[$date_index]));
+
+    $matchesDate = $date ? ($rowTimestamp >= $startTimestamp && $rowTimestamp < $endTimestamp) : true;
+
+    if ($matchesDog && $matchesDate) {
         $filtered_row = [];
+
         foreach ($column_indexes as $column => $index) {
             $filtered_row[$column] = $row[$index];
         }
-        // Always include Hour if available
-        $hourIndex = array_search('Hour', $header);
-        if ($hourIndex !== false) {
-            $filtered_row['Hour'] = $row[$hourIndex];
+
+        if ($hour_index !== false) {
+            $filtered_row['Hour'] = $row[$hour_index];
         }
+
         $data[] = $filtered_row;
     }
 }
