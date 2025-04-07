@@ -2,11 +2,6 @@
 let xhr = new XMLHttpRequest();
 let yhr = new XMLHttpRequest();
 
-//General variables
-let myChart = null;
-let columnsToFetch = ['Hour'];
-let queryDate = null;
-
 //Varaibles (*varialbls) for html elements
 const queryForm = document.getElementById("dataQuery")
 const selectColumn = document.getElementById("dataSelect");
@@ -15,6 +10,12 @@ const ctx = document.getElementById('myChart').getContext('2d');
 const chatTypes = ['bar','line','bubble','doughnut','pie','polarArea','radar','scatter'];
 const chartTypeSelect = document.getElementById("chartTypes");
 const datePicker = document.getElementById("datePicker");
+
+//General variables
+let myChart = null;
+let columnsToFetch = ['Hour'];
+let minDate = null;
+let maxDate = null;
 
 //Event listeners
 queryForm.addEventListener("submit", queryData)
@@ -35,6 +36,12 @@ function setDateRange(minDate, maxDate) {
     datePicker.min = minDate;
     datePicker.max = maxDate;
     datePicker.value = maxDate; // default date is the latest entry in csv
+}
+
+//Function invoked when form submitted to reformat dates to dd-mm-yyyy for the csv
+function formatDateForCSV(queryDate) {
+    const [year, month, day] = queryDate.split("-");
+    return `${day.padStart(2, '0')}-${month.padStart(2, '0')}-${year}`;
 }
 
 //Invoked via fetchDates() to format the date from the database to ISO format (They are dd-mm-yyyy in the CSV file)
@@ -62,7 +69,6 @@ async function fetchDates() {
     }
 }
 
-
 //Invoked immediately to populate the select column with the headers from the database
 yhr.open('GET', 'getHeaders.php', true);
 yhr.setRequestHeader('Accept', 'application.json')
@@ -89,12 +95,14 @@ yhr.onload = function () {
 }
 
 //Function invoked by the event listener when user sumbits the form, it handles form input and calls the php code to get the data required
-function queryData(event) {
+function queryData(event, minDate, maxDate) {
     event.preventDefault();
-    /*if (minDate > queryDate || queryDate > maxDate) {
+    let queryDate = datePicker.value;
+    if (minDate > queryDate || queryDate > maxDate) {
         alert("Please select a date within the range provided.");
         return;
-    }*/
+    }
+    formatDateForCSV(queryDate);
     const selectedColumns = Array.isArray(selectColumn.value)
         ? selectColumn.value
         : [selectColumn.value];
