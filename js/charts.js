@@ -38,6 +38,14 @@ function setDateRange(minDate, maxDate) {
     datePicker.value = maxDate; // default date is the latest entry in csv
 }
 
+//Prevents out of range searches
+function addDaysToUTCDate(selectedDate, rangeDays) {
+    const [year, month, day] = selectedDate.split('-').map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day));
+    date.setUTCDate(date.getUTCDate() + rangeDays);
+    return date;
+}
+
 //Function invoked when form submitted to reformat dates to dd-mm-yyyy for the csv
 function formatDateForCSV(queryDate) {
     const [year, month, day] = queryDate.split("-");
@@ -53,7 +61,7 @@ function formatDateToISO(dateString) {
 //invoked immediately to fetch the min and max dates from the database
 async function fetchDates() {
     try {
-        const response = await fetch('getDates.php');
+        const response = await fetch('/../php_scripts/getDates.php');
         const data = await response.json();
 
         if (data.error) {
@@ -70,7 +78,7 @@ async function fetchDates() {
 }
 
 //Invoked immediately to populate the select column with the headers from the database
-yhr.open('GET', 'getHeaders.php', true);
+yhr.open('GET', '/../php_scripts/getHeaders.php', true);
 yhr.setRequestHeader('Accept', 'application.json')
 yhr.onload = function () {
     if (yhr.readyState === yhr.DONE) {
@@ -97,12 +105,15 @@ yhr.onload = function () {
 //Function invoked by the event listener when user sumbits the form, it handles form input and calls the php code to get the data required
 function queryData(event, minDate, maxDate) {
     event.preventDefault();
-    let queryDate = datePicker.value;
-    if (minDate > queryDate || queryDate > maxDate) {
+    const dogId = selectElement.value;
+    const selectedDate = datePicker.value; // date thingy
+    const rangeDays = document.getElementById("rangeDays").value; // day range thingy
+    const endDate = addDaysToUTCDate(selectedDate, rangeDays);
+    if (minDate > selectedDate || endDate > maxDate) {
         alert("Please select a date within the range provided.");
         return;
     }
-    formatDateForCSV(queryDate);
+    /*formatDateForCSV(selectedDate);*/
     const selectedColumns = Array.isArray(selectColumn.value)
         ? selectColumn.value
         : [selectColumn.value];
@@ -114,10 +125,6 @@ function queryData(event, minDate, maxDate) {
             columnsToFetch.push(column);
         }
     });
-
-    const dogId = selectElement.value;
-    const selectedDate = datePicker.value; // date thingy
-    const rangeDays = document.getElementById("rangeDays").value; // day range thingy
 
     const params = new URLSearchParams();
     params.append('DogID', dogId);
@@ -131,7 +138,7 @@ function queryData(event, minDate, maxDate) {
     labelKey = columnsToFetch;
     dataKey = columnsToFetch;
 
-    xhr.open('GET', `getData.php?${params.toString()}`, true);
+    xhr.open('GET', `/../php_scripts/getData.php?${params.toString()}`, true);
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.send();
 }

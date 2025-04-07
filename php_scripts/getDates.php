@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-$csvPath = __DIR__ . '/database/activityData.csv';
+$csvPath = __DIR__ . '/../database/activityData.csv';
 
 if (!file_exists($csvPath)) {
     echo json_encode(['error' => 'CSV file not found']);
