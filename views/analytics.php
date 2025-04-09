@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<link rel="stylesheet" href="css/dashboard.css">
-
+<link rel="stylesheet" href="/../css/analytics.css">
 <div class="dashboard-container">
 <html lang="en">
 <head>

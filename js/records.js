@@ -1,15 +1,13 @@
 let currentData = [];
-const CSV_PATH = '/../database/actvityData.csv';
+const CSV_PATH = '/../database/activityData.csv';
 
-    document.getElementById('csvFile').addEventListener('change', function (e) {
-      Papa.parse(CSV_PATH, {
-        download: true,
-        complete: function (results) {
-        const data = results.data.filter(row => row.length > 1);
-        renderTable(data);
-        }
-      });
-    });
+Papa.parse(CSV_PATH, {
+  download: true,
+  complete: function (results) {
+    const data = results.data.filter(row => row.length > 1);
+    renderTable(data);
+    }
+});
 
     function renderTable(data, sortColumn = null, sortDirection = 'asc') {
       const table = document.getElementById('csvTable');
