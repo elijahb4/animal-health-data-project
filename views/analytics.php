@@ -11,7 +11,7 @@
     <form id="dataQuery">
         <select id="selectDog" required></select>
         <input type="date" id="datePicker" min="2021-01-01" max="2023-12-31" />
-        <select id="dataSelect" required></select>
+        <div id="checkboxContainer"></div>
         <select id="chartTypes" required></select>
       
         <label for="rangeDays">Number of Days:</label>

@@ -4,7 +4,9 @@ let yhr = new XMLHttpRequest();
 
 //Varaibles (*varialbls) for html elements
 const queryForm = document.getElementById("dataQuery")
-const selectColumn = document.getElementById("dataSelect");
+const container = document.getElementById("checkboxContainer");
+//const checkbox = document.getElementById("checkbox");
+//const checkboxValue = checkbox.value;
 const selectElement = document.getElementById('selectDog');
 const ctx = document.getElementById('myChart').getContext('2d');
 const chatTypes = ['bar','line','bubble','doughnut','pie','polarArea','radar','scatter'];
@@ -89,10 +91,19 @@ yhr.onload = function () {
         response = JSON.parse(yhr.responseText);
         console.log(response)
         response.forEach(column => {
-            const option = document.createElement('option');
-            option.value = column;
-            option.textContent = column;
-            selectColumn.appendChild(option);
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = column.toLowerCase();
+            checkbox.name = 'columns';
+            checkbox.value = column;
+
+            const label = document.createElement('label');
+            label.htmlFor = checkbox.id;
+            label.textContent = column;
+
+            container.appendChild(checkbox);
+            container.appendChild(label);
+            container.appendChild(document.createElement('br'));
         })
     }
     catch (e) {
@@ -113,18 +124,15 @@ function queryData(event, minDate, maxDate) {
         alert("Please select a date within the range provided.");
         return;
     }
-    /*formatDateForCSV(selectedDate);*/
-    const selectedColumns = Array.isArray(selectColumn.value)
-        ? selectColumn.value
-        : [selectColumn.value];
 
-    columnsToFetch = [];
+    const checkedBoxes = document.querySelectorAll('input[name="columns"]:checked');
 
-    selectedColumns.forEach(column => {
-        if (column && !columnsToFetch.includes(column)) {
-            columnsToFetch.push(column);
-        }
-    });
+    columnsToFetch = Array.from(checkedBoxes).map(checkbox => checkbox.value);
+
+    if (columnsToFetch.length === 0) {
+        alert("Please select at least one column to display.");
+        return;
+    }
 
     const params = new URLSearchParams();
     params.append('DogID', dogId);
@@ -144,7 +152,7 @@ function queryData(event, minDate, maxDate) {
 }
 
 //Function to call and handle the response from the server
-xhr.onload = function (selectColumnValue) {
+xhr.onload = function () {
     if (xhr.readyState === xhr.DONE) {
         if (xhr.status === 200) {
     try {
@@ -152,7 +160,7 @@ xhr.onload = function (selectColumnValue) {
         const response = JSON.parse(xhr.responseText);
         console.log('Response:', response);
         console.log('Columns to fetch:', columnsToFetch);
-        makeChart(ctx, response, columnsToFetch[0]);
+        makeChart(ctx, response, columnsToFetch);
     }
     catch (e) {
         console.error(e.message);
@@ -162,8 +170,8 @@ xhr.onload = function (selectColumnValue) {
 }
 
 //Function to create the chart using Chart.js
-function makeChart(ctx, response, selectedColumn) {
-    console.log('Chart column:', selectedColumn);
+function makeChart(ctx, response, columns) {
+    console.log('Chart columns:', columns);
     console.log('Sample data row:', response[0]);
     if (myChart) {
         myChart.destroy();
@@ -172,47 +180,67 @@ function makeChart(ctx, response, selectedColumn) {
     const chartTypeValue = chartTypeSelect.value;
     console.log("Selected Chart Type:", chartTypeValue);
 
-    let labels = [];
-    let data = [];
+    // Predefined color palette - can be replaced with random color generation later
+    const colorPalette = [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 205, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(153, 102, 255)',
+        'rgb(255, 159, 64)',
+        'rgb(201, 203, 207)'
+    ];
 
-    //This section checks if the selected column is numeric or categorical
-    const isNumeric = response.every(item => !isNaN(parseFloat(item[selectedColumn])));
-    if (!isNumeric) {
-        //Categorical Data
-        const counts = response.reduce((acc, item) => {
-            const value = item[selectedColumn];
-            acc[value] = (acc[value] || 0) + 1;
-            return acc;
-        }, {});
+    let labels = response.map(item => item['Hour']); // Common x-axis labels
+    let datasets = columns.map((column, index) => {
+        let data = [];
 
-        labels = Object.keys(counts);
-        data = Object.values(counts);
-    } else {
-        //Numeric Data
-        labels = response.map(item => item['Hour']);
-        data = response.map(item => item[selectedColumn]);
-    }
+        // Check if the column data is numeric or categorical
+        const isNumeric = response.every(item => !isNaN(parseFloat(item[column])));
+        if (!isNumeric) {
+            // Categorical Data
+            const counts = response.reduce((acc, item) => {
+                const value = item[column];
+                acc[value] = (acc[value] || 0) + 1;
+                return acc;
+            }, {});
+
+            labels = Object.keys(counts);
+            data = Object.values(counts);
+        } else {
+            // Numeric Data
+            data = response.map(item => item[column]);
+        }
+
+        // Use color from palette, cycling through if more datasets than colors
+        const colorIndex = index % colorPalette.length;
+        
+        return {
+            label: `Data for ${column}`,
+            data: data,
+            backgroundColor: colorPalette[colorIndex],
+            borderColor: colorPalette[colorIndex],
+            borderWidth: 1,
+            fill: false
+        };
+    });
 
     console.log("Chart Labels:", labels);
-    console.log("Chart Data:", data);
+    console.log("Datasets:", datasets);
 
     myChart = new Chart(ctx, {
         type: chartTypeValue,
         data: {
             labels: labels,
-            datasets: [{
-                label: `Data for ${selectedColumn}`,
-                data: data,
-                backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)',
-                    'rgb(54, 162, 235)',
-                    'rgb(153, 102, 255)',
-                    'rgb(201, 203, 207)'
-                ],
-            }]
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
         }
     });
 
