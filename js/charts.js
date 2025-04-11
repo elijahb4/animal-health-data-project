@@ -12,6 +12,8 @@ const ctx = document.getElementById('myChart').getContext('2d');
 const chatTypes = ['bar','line','bubble','doughnut','pie','polarArea','radar','scatter'];
 const chartTypeSelect = document.getElementById("chartTypes");
 const datePicker = document.getElementById("datePicker");
+const expandButton = document.getElementById('expandCheckboxes');
+const downloadButtons = document.getElementById('download-button-container');
 
 //General variables
 let myChart = null;
@@ -21,6 +23,79 @@ let maxDate = null;
 
 //Event listeners
 queryForm.addEventListener("submit", queryData)
+
+//Expand/collapse the checkboxes
+expandButton.addEventListener('click', () => {
+    const isVisible = checkboxContainer.style.display === 'block';
+    checkboxContainer.style.display = isVisible ? 'none' : 'block';
+    expandButton.textContent = isVisible ? 'Show Options ▼' : 'Hide Options ▲';
+});
+
+//download chart as pdf
+async function makePDF() {
+    const { jsPDF } = window.jspdf;
+    const chartCanvas = document.getElementById('myChart');
+    const imgData = chartCanvas.toDataURL('image/png');
+
+    const pdf = new jsPDF();
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    const imgWidth = pdfWidth - 20;
+    const imgHeight = (chartCanvas.height / chartCanvas.width) * imgWidth;
+
+    const x = 10;
+    const y = (pdfHeight - imgHeight) / 2;
+
+    pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+    pdf.save("chart.pdf");
+}
+
+//download chart as bitmap
+function downloadBitmap() {
+    const chartCanvas = document.getElementById('myChart');
+    const imgURL = chartCanvas.toDataURL('image/png');
+
+    const link = document.createElement('a');
+    link.href = imgURL;
+    link.download = 'chart.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+//Export JSON
+function exportJSON(data) {
+    const jsonStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonStr], { type: "application/json" });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'chart_data.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+//Export CSV
+function exportCSV(data) {
+    if (!data.length) return;
+
+    const headers = Object.keys(data[0]);
+    const csvRows = [
+        headers.join(','), // Header row
+        ...data.map(row => headers.map(field => `"${row[field]}"`).join(','))
+    ];
+
+    const csvStr = csvRows.join('\n');
+    const blob = new Blob([csvStr], { type: "text/csv" });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'chart_data.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 
 //invoked immediately to populate the chart types
 function populate_chartTypes() {
@@ -91,20 +166,26 @@ yhr.onload = function () {
         response = JSON.parse(yhr.responseText);
         console.log(response)
         response.forEach(column => {
+            const wrapper = document.createElement('div');
+            wrapper.style.display = 'flex';
+            wrapper.style.alignItems = 'center';
+            wrapper.style.gap = '6px';
+            wrapper.style.marginBottom = '4px';
+        
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.id = column.toLowerCase();
             checkbox.name = 'columns';
             checkbox.value = column;
-
+        
             const label = document.createElement('label');
             label.htmlFor = checkbox.id;
             label.textContent = column;
-
-            container.appendChild(checkbox);
-            container.appendChild(label);
-            container.appendChild(document.createElement('br'));
-        })
+        
+            wrapper.appendChild(checkbox);
+            wrapper.appendChild(label);
+            container.appendChild(wrapper);
+        });
     }
     catch (e) {
         console.error(e.message);
@@ -244,9 +325,20 @@ function makeChart(ctx, response, columns) {
         }
     });
 
+    downloadButtons.innerHTML = `<button id="pdfButton">Download as PDF</button> <button id="pngButton">Download as PNG</button> <button id="jsonButton">Export JSON</button> <button id="csvButton">Download as CSV</button>`;
+    const pdfButton = document.getElementById('pdfButton');
+    const pngButton = document.getElementById('pngButton');
+    const jsonButton = document.getElementById('jsonButton');
+    const csvButton = document.getElementById('csvButton');
+    pdfButton.addEventListener('click', makePDF);
+    pngButton.addEventListener('click', downloadBitmap);
+    jsonButton.addEventListener('click', () => exportJSON(response));
+    csvButton.addEventListener('click', () => exportCSV(response));
     return myChart;
 }
 
-yhr.send();
-fetchDates();
-populate_chartTypes();
+document.addEventListener('DOMContentLoaded', () => {
+    yhr.send();
+    fetchDates();
+    populate_chartTypes();
+  });
