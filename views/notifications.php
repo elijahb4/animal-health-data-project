@@ -1,7 +1,9 @@
 <?php
-include 'header.php';
-include 'sidebar.php';
+include 'components/header.php';
+include 'components/sidebar.php';
+include 'components/footer.php';
 ?>
+
 
 <div class="dashboard-container">
     <h2>📢 Notifications</h2>
@@ -12,4 +14,5 @@ include 'sidebar.php';
 <script src="../js/notifications.js"></script>
 
 
-<?php include 'footer.php'; ?>
+<?php include 'components/footer.php'; ?>
+
