@@ -1,23 +1,22 @@
 <link rel="stylesheet" href="css/dashboard.css">
 
 <div class="dashboard-container">
-
   <div class="metrics-bar">
     <div class="metric-card">
       <h4>Avg Calorie Burn</h4>
-      <p>N/A</p>
+      <p id="metricCalories">Loading...</p>
     </div>
     <div class="metric-card">
       <h4>Avg Heart Rate</h4>
-      <p>N/A</p>
+      <p id="metricHeartRate">Loading...</p>
     </div>
     <div class="metric-card">
       <h4>Food Intake</h4>
-      <p>N/A</p>
+      <p id="metricFood">Loading...</p>
     </div>
     <div class="metric-card">
       <h4>Water Intake</h4>
-      <p>N/A</p>
+      <p id="metricWater">Loading...</p>
     </div>
   </div>
 
@@ -32,7 +31,7 @@
   </div>
 
   <div class="dog-highlight">
-    <img src="assets/content/GWFbN43WsAAAmLv.jpeg" alt="Dog of the Day">
+    <img src="assets/content/Screenshot_20250411_214200_Instagram.jpg" alt="Dog of the Day">
     <div>
       <h4>Dog of the Day</h4>
       <p>CANINE003 - Excellent performance in activity and health levels.</p>
