@@ -7,19 +7,19 @@
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
-    gap: 16px; /* spacing between form-groups */
+    gap: 16px;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    width: auto; /* or a fixed width if needed */
+    width: auto;
 }
 
 #checkboxContainer {
     display: flex;
     flex-direction: column;
-    gap: 4px; /* space between checkboxes */
+    gap: 4px;
 }
 
 #checkboxContainer {

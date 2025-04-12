@@ -1,18 +1,72 @@
+#form-container {
+    width: 100%;
+    height: auto;
+}
+
+#dataQuery {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px; /* spacing between form-groups */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    width: auto; /* or a fixed width if needed */
+}
+
+#checkboxContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 4px; /* space between checkboxes */
+}
+
+#checkboxContainer {
+    display: none;
+}
+
+#submit {
+    white-space: normal;
+}
+
+#download-button-container {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: left;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+html, body {
+    height: 100%;
+}
+
 table {
     border-collapse: collapse;
     width: 100%;
 }
+
 th, td {
     border: 1px solid #ccc;
     padding: 8px;
-    }
+}
+
 th {
     cursor: pointer;
     background-color: #f0f0f0;
 }
+
 th.sorted-asc::after {
     content: " ▲";
-    }
+}
+
 th.sorted-desc::after {
     content: " ▼";
 }
