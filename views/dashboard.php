@@ -145,34 +145,51 @@
     </ul>
   </div>
 
-  <!-- TESTING PURPOIS ONLY
-  <form id="dataQuery">
-    <label for="selectDog">Dog ID:</label>
-    <select id="selectDog" required></select>
+  <!-- prediction tile -->
+  <section class="prediction-tile">
+    <div class="prediction-header">
+      <h3>Predicted Trends</h3>
+      <p>Forecast future values using machine learning</p>
+    </div>
 
-    <label for="dataSelect">Metric:</label>
-    <select id="dataSelect" required></select>
+    <form id="mlPredictionForm" class="prediction-form">
+      <div>
+        <label for="mlDog">Dog ID:</label>
+        <select id="mlDog"></select>
+      </div>
 
-    <label for="chartTypes">Chart Type:</label>
-    <select id="chartTypes" required></select>
+      <div>
+        <label for="mlMetric">Metric:</label>
+        <select id="mlMetric">
+          <option value="Calorie Burn">Calorie Burn</option>
+          <option value="Heart Rate (bpm)">Heart Rate (bpm)</option>
+          <option value="Food Intake (calories)">Food Intake</option>
+          <option value="Water Intake (ml)">Water Intake</option>
+        </select>
+      </div>
 
-    <label for="datePicker">Start Date:</label>
-    <input type="date" id="datePicker" />
+      <div>
+        <label for="mlStart">Start Date:</label>
+        <input type="date" id="mlStart">
+      </div>
 
-    <label for="rangeDays">Select Range:</label>
-    <select id="rangeDays" name="rangeDays">
-      <option value="1">Last 1 Day</option>
-      <option value="3">Last 3 Days</option>
-      <option value="7" selected>Last 7 Days</option>
-      <option value="14">Last 14 Days</option>
-      <option value="30">Last 30 Days</option>
-    </select>
+      <div>
+        <label for="mlDays">Predict Next (Days):</label>
+        <select id="mlDays">
+          <option value="1">1</option>
+          <option value="3">3</option>
+          <option value="7" selected>7</option>
+          <option value="14">14</option>
+          <option value="30">30</option>
+        </select>
+      </div>
 
-    <input type="submit" value="Generate Chart" />
-  </form>
+      <button type="submit">Generate Prediction</button>
+    </form>
 
-  <canvas id="myChart" width="800" height="400"></canvas>
-  -->
+    <canvas id="mlPredictionChart"></canvas>
+  </section>
+
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
   <script src="js/getDogs.js"></script>

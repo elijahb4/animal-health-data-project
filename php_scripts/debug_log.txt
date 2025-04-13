@@ -1,0 +1,14 @@
+COMMAND: python ../python/ml_predictor.py ../database/activityData.csv CANINE001 ^"Calorie Burn^" 2020-01-01 7
+OUTPUT: 
+COMMAND: python3 ../python/ml_predictor.py "../database/activityData.csv" "CANINE001" "Calorie Burn" "2020-01-13" 7 2>&1
+OUTPUT: Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2021-01-13" 7 2>&1
+OUTPUT: Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+
+COMMAND: python3 "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2020-01-01" 7 2>&1
+OUTPUT: Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2020-01-01" 7 2>&1
+OUTPUT: Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+

@@ -334,12 +334,115 @@ async function setDatePickerLimits() {
   }
 }
 
+document.getElementById('mlPredictionForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const dogId = document.getElementById('mlDog').value;
+  const metric = document.getElementById('mlMetric').value;
+  const startDate = document.getElementById('mlStart').value;
+  const days = parseInt(document.getElementById('mlDays').value);
+
+  const labels = [];
+  const values = [];
+
+  try {
+    const response = await fetch('php_scripts/getPredictions.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        dogId,
+        metric,
+        startDate,
+        days
+      })
+    });
+
+    // 👇 read text first to inspect it
+    const responseText = await response.text();
+    console.log('raw response from PHP:', responseText);
+
+    const result = JSON.parse(responseText); // 👈 only parse after logging
+
+    result.forEach(entry => {
+      labels.push(new Date(entry.date).toLocaleDateString('en-GB'));
+      values.push(entry.value);
+    });
+
+  } catch (err) {
+    console.error('prediction fetch error', err);
+    return; // stop here if something went wrong
+  }
+
+  const ctx = document.getElementById('mlPredictionChart').getContext('2d');
+
+  // ✅ safe check before destroy
+  if (window.mlPredictionChart && typeof window.mlPredictionChart.destroy === 'function') {
+    window.mlPredictionChart.destroy();
+  }
+
+  window.mlPredictionChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: `Predicted ${metric}`,
+        data: values,
+        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+        borderColor: 'rgba(153, 102, 255, 1)',
+        borderWidth: 2,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: `Forecast for ${metric} (${startDate} + ${days} days)`
+        }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+});
+
+// populate mlDog dropdown
+function populateMlDogDropdown() {
+  let mlDogRequest = new XMLHttpRequest();
+
+  mlDogRequest.open('GET', 'php_scripts/getDogs.php', true);
+  mlDogRequest.setRequestHeader('Accept', 'application/json');
+
+  mlDogRequest.onload = function () {
+    if (mlDogRequest.readyState === mlDogRequest.DONE && mlDogRequest.status === 200) {
+      try {
+        const dogs = JSON.parse(mlDogRequest.responseText);
+        const mlDogSelect = document.getElementById('mlDog');
+        dogs.forEach(dog => {
+          const option = document.createElement('option');
+          option.value = dog;
+          option.textContent = dog;
+          mlDogSelect.appendChild(option);
+        });
+      } catch (e) {
+        console.error("failed to parse dog list", e);
+      }
+    }
+  };
+  mlDogRequest.send();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   startCarousel('healthChart');
   startCarousel('vitalsChart');
   startCarousel('behaviourChart');
   updateMetricCards();
   setDatePickerLimits();
+  populateMlDogDropdown();
 });
 
 document.addEventListener("visibilitychange", () => {
