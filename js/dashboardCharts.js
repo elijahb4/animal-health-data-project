@@ -1,3 +1,25 @@
+let currentDog = 'CANINE001'; // default values
+let currentStartDate = null;
+let currentRange = 7;
+
+// handling form submission for graph filters
+document.getElementById('carouselFilterForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  currentDog = document.getElementById('selectDog').value;
+  currentStartDate = document.getElementById('datePicker').value;
+  currentRange = parseInt(document.getElementById('rangeDays').value);
+  const category = document.getElementById('carouselCategory').value;
+
+  if (category === 'all') {
+    startCarousel('healthChart');
+    startCarousel('vitalsChart');
+    startCarousel('behaviourChart');
+  } else {
+    startCarousel(category);
+  }
+});
+
 const carouselState = {
   healthChart: { index: 0, interval: null },
   vitalsChart: { index: 0, interval: null },
@@ -22,19 +44,37 @@ const carouselCharts = {
   ]
 };
 
-async function fetchAndDrawChart(canvasId, column, chartType = 'line', rangeDays = 7) {
+async function fetchAndDrawChart(canvasId, column, chartType = 'line') {
   try {
-    const dogId = 'CANINE001';
-    const dateRes = await fetch('php_scripts/getDates.php');
-    const dateData = await dateRes.json();
-    const maxDate = dateData.maxDate; // dd-mm-yyyy
-    console.log("Date data from getDates.php:", dateData);
+    const dogId = currentDog;
 
-    const formattedDate = `${maxDate.split('-').reverse().join('-')}`; // to yyyy-mm-dd
+    // get latest user range from dropdown
+    const rangeInput = document.getElementById('rangeDays');
+    const rangeDays = parseInt(rangeInput?.value || currentRange);
 
+    // get the selected date
+    let startDate = currentStartDate;
+    if (!startDate) {
+      const dateRes = await fetch('php_scripts/getDates.php');
+      const dateData = await dateRes.json();
+      startDate = dateData.maxDate.split('-').reverse().join('-');
+    }
+
+    const dateMode = document.getElementById('dateMode').value;
+
+    let startDateToSend;
+    if (dateMode === 'from') {
+      startDateToSend = startDate;
+    } else {
+      const end = new Date(startDate);
+      end.setDate(end.getDate() - (rangeDays - 1));
+      startDateToSend = end.toISOString().slice(0, 10); // yyyy-mm-dd
+    }
+
+    // send parameters
     const params = new URLSearchParams();
     params.append('DogID', dogId);
-    params.append('Date', formattedDate);
+    params.append('Date', startDateToSend);
     params.append('rangeDays', rangeDays);
     params.append('columns[]', column);
 
@@ -46,18 +86,15 @@ async function fetchAndDrawChart(canvasId, column, chartType = 'line', rangeDays
       return;
     }
 
+    // build chart data
     const ctx = document.getElementById(canvasId).getContext('2d');
     const isNumeric = data.every(item => !isNaN(parseFloat(item[column])) && item[column] !== '');
 
-    let labels = [];
-    let values = [];
-
+    let labels = [], values = [];
     if (isNumeric) {
-      // numeric data: time series based on hour
       labels = data.map(d => d.Hour);
       values = data.map(d => parseFloat(d[column]));
     } else {
-      // categorical data: count frequency
       const counts = data.reduce((acc, item) => {
         const value = item[column];
         if (value) acc[value] = (acc[value] || 0) + 1;
@@ -67,12 +104,19 @@ async function fetchAndDrawChart(canvasId, column, chartType = 'line', rangeDays
       values = Object.values(counts);
     }
 
-    // wrapped in animated effect?
+    // fade animation
     const canvas = document.getElementById(canvasId);
     canvas.classList.remove('show');
 
+    // compute title range
+    const startDateObj = new Date(startDateToSend);
+    const endDateObj = new Date(startDateToSend);
+    endDateObj.setDate(startDateObj.getDate() + rangeDays - 1);
+
+    const titleStart = startDateObj.toLocaleDateString('en-GB');
+    const titleEnd = endDateObj.toLocaleDateString('en-GB');
+
     setTimeout(() => {
-      // clear previous chart if exists
       if (window[canvasId + '_chart']) {
         window[canvasId + '_chart'].destroy();
       }
@@ -80,7 +124,7 @@ async function fetchAndDrawChart(canvasId, column, chartType = 'line', rangeDays
       window[canvasId + '_chart'] = new Chart(ctx, {
         type: chartType,
         data: {
-          labels: labels,
+          labels,
           datasets: [{
             label: column,
             data: values,
@@ -99,17 +143,16 @@ async function fetchAndDrawChart(canvasId, column, chartType = 'line', rangeDays
             title: {
               display: true,
               text: isNumeric
-                ? `Average ${column} (Last ${rangeDays} Days)`
+                ? `${column} (${titleStart} to ${titleEnd})`
                 : `Distribution of ${column}`
             }
           },
-          scales: isNumeric
-            ? { y: { beginAtZero: true } }
-            : {} // no special scale for categorical
+          scales: isNumeric ? { y: { beginAtZero: true } } : {}
         }
       });
+
       canvas.classList.add('show');
-    }, 300); // fade out time
+    }, 100);
   } catch (e) {
     console.error(`Error loading ${column} chart`, e);
   }
@@ -129,12 +172,12 @@ function startCarousel(tileId) {
     state.index = index;
   }
 
+  drawChart(state.index); // draw immediately
+
   state.interval = setInterval(() => {
     const nextIndex = (state.index + 1) % chartList.length;
     drawChart(nextIndex);
   }, 8000);
-
-  drawChart(state.index);
 }
 
 function nextChart(tileId) {
@@ -160,15 +203,11 @@ function startManualCarousel(tileId, newIndex) {
   updateTitle(tileId, chartConfig.column);
   carouselState[tileId].index = newIndex;
 
-  // restart auto-rotation
-  carouselState[tileId].interval = setInterval(() => {
-    const nextIndex = (carouselState[tileId].index + 1) % chartList.length;
-    startManualCarousel(tileId, nextIndex);
-  }, 8000);
+  // restart auto rotation
+  startCarousel(tileId);
 }
 
 function updateDots(tileId, activeIndex) {
-  console.log(`updateDots called for ${tileId} with activeIndex ${activeIndex}`);
   const dotsContainer = document.getElementById(`${tileId}Dots`);
   dotsContainer.innerHTML = '';
 
@@ -201,39 +240,98 @@ function updateTitle(tileId, column) {
 
 async function updateMetricCards() {
   const dogId = 'CANINE001';
+
   const dateRes = await fetch('php_scripts/getDates.php');
   const dateData = await dateRes.json();
-  const maxDate = dateData.maxDate; // format: dd-mm-yyyy
-  const formattedDate = maxDate.split('-').reverse().join('-');
+  const maxDate = dateData.maxDate;
+  const formattedMax = maxDate.split('-').reverse().join('-');
 
   const columns = ['Calorie Burn', 'Heart Rate (bpm)', 'Food Intake (calories)', 'Water Intake (ml)'];
 
-  const params = new URLSearchParams();
-  params.append('DogID', dogId);
-  params.append('Date', formattedDate);
-  params.append('rangeDays', 7);
-  columns.forEach(col => params.append('columns[]', col));
+  const recentParams = new URLSearchParams();
+  recentParams.append('DogID', dogId);
+  recentParams.append('Date', formattedMax);
+  recentParams.append('rangeDays', 7);
+  columns.forEach(col => recentParams.append('columns[]', col));
+  const recentData = await (await fetch(`php_scripts/getData.php?${recentParams.toString()}`)).json();
 
-  const response = await fetch(`php_scripts/getData.php?${params.toString()}`);
-  const data = await response.json();
+  const maxDateObj = new Date(formattedMax);
+  maxDateObj.setDate(maxDateObj.getDate() - 1);
+  const yesterday = maxDateObj.toISOString().slice(0, 10);
 
-  if (!Array.isArray(data)) {
-    console.error("Invalid metric data response", data);
-    return;
+  const prevParams = new URLSearchParams();
+  prevParams.append('DogID', dogId);
+  prevParams.append('Date', yesterday);
+  prevParams.append('rangeDays', 1);
+  columns.forEach(col => prevParams.append('columns[]', col));
+  const prevData = await (await fetch(`php_scripts/getData.php?${prevParams.toString()}`)).json();
+
+  function avg(data, col) {
+    const vals = data.map(d => parseFloat(d[col])).filter(n => !isNaN(n));
+    return vals.length ? (vals.reduce((a, b) => a + b, 0) / vals.length) : null;
   }
 
-  // average calculator
-  function average(col) {
-    const values = data.map(d => parseFloat(d[col])).filter(n => !isNaN(n));
-    const sum = values.reduce((a, b) => a + b, 0);
-    return values.length ? (sum / values.length).toFixed(1) : 'N/A';
-  }
+  columns.forEach(col => {
+    const currentAvg = avg(recentData, col);
+    const prevVal = avg(prevData, col);
 
-  // update UI
-  document.getElementById('metricCalories').textContent = average('Calorie Burn');
-  document.getElementById('metricHeartRate').textContent = average('Heart Rate (bpm)');
-  document.getElementById('metricFood').textContent = average('Food Intake (calories)');
-  document.getElementById('metricWater').textContent = average('Water Intake (ml)');
+    const id = col.includes('Calorie') ? 'Calories'
+              : col.includes('Heart') ? 'HeartRate'
+              : col.includes('Food') ? 'Food'
+              : 'Water';
+
+    document.getElementById(`metric${id}`).textContent = currentAvg?.toFixed(1) ?? 'N/A';
+
+    const trendElem = document.getElementById(`metric${id}Trend`);
+
+    if (prevVal !== null && currentAvg !== null) {
+      const diff = currentAvg - prevVal;
+      const absDiff = Math.abs(diff).toFixed(1);
+
+      let emoji = '', className = '', text = '';
+
+      if (diff > 0.1) {
+        emoji = '🔼';
+        className = 'trend-up';
+        text = `+${absDiff}`;
+      } else if (diff < -0.1) {
+        emoji = '🔽';
+        className = 'trend-down';
+        text = `-${absDiff}`;
+      } else {
+        emoji = '➖';
+        className = 'trend-same';
+        text = `0.0`;
+      }
+
+      trendElem.textContent = `${emoji} ${text}`;
+      trendElem.className = `trend-indicator ${className}`;
+    } else {
+      trendElem.textContent = '';
+      trendElem.className = 'trend-indicator trend-same';
+    }
+  });
+}
+
+async function setDatePickerLimits() {
+  try {
+    const res = await fetch('php_scripts/getDates.php');
+    const data = await res.json();
+
+    if (data.minDate && data.maxDate) {
+      const min = data.minDate.split('-').reverse().join('-'); // to yyyy-mm-dd
+      const max = data.maxDate.split('-').reverse().join('-');
+
+      const dateInput = document.getElementById('datePicker');
+      dateInput.min = min;
+      dateInput.max = max;
+      dateInput.value = max; // default to latest date!!!
+    } else {
+      console.error("Missing minDate or maxDate in getDates.php response:", data);
+    }
+  } catch (err) {
+    console.error("Failed to fetch date limits:", err);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -241,6 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
   startCarousel('vitalsChart');
   startCarousel('behaviourChart');
   updateMetricCards();
+  setDatePickerLimits();
 });
 
 document.addEventListener("visibilitychange", () => {
