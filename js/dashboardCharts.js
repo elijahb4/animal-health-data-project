@@ -1,6 +1,6 @@
 let currentDog = 'CANINE001'; // default values
 let currentStartDate = null;
-let currentRange = 7;
+let currentRange = 1;
 
 // handling form submission for graph filters
 document.getElementById('carouselFilterForm').addEventListener('submit', async function (e) {
