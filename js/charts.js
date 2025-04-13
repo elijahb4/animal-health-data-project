@@ -22,9 +22,7 @@ let minDate = null;
 let maxDate = null;
 
 //Event listeners
-if (queryForm) {
-    queryForm.addEventListener("submit", queryData);
-}
+queryForm.addEventListener("submit", queryData)
 
 //Expand/collapse the checkboxes
 expandButton.addEventListener('click', () => {
@@ -140,7 +138,7 @@ function formatDateToISO(dateString) {
 //invoked immediately to fetch the min and max dates from the database
 async function fetchDates() {
     try {
-        const response = await fetch('php_scripts/getDates.php');
+        const response = await fetch('/../php_scripts/getDates.php');
         const data = await response.json();
 
         if (data.error) {
@@ -157,7 +155,7 @@ async function fetchDates() {
 }
 
 //Invoked immediately to populate the select column with the headers from the database
-yhr.open('GET', 'php_scripts/getHeaders.php', true);
+yhr.open('GET', '/../php_scripts/getHeaders.php', true);
 yhr.setRequestHeader('Accept', 'application.json')
 yhr.onload = function () {
     if (yhr.readyState === yhr.DONE) {
@@ -229,7 +227,7 @@ function queryData(event, minDate, maxDate) {
     labelKey = columnsToFetch;
     dataKey = columnsToFetch;
 
-    xhr.open('GET', `php_scripts/getData.php?${params.toString()}`, true);
+    xhr.open('GET', `/../php_scripts/getData.php?${params.toString()}`, true);
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.send();
 }

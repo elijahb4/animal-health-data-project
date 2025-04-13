@@ -1,5 +1,5 @@
 let currentData = [];
-const CSV_PATH = 'database/activityData.csv';
+const CSV_PATH = '/../database/activityData.csv';
 
 Papa.parse(CSV_PATH, {
   download: true,

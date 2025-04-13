@@ -1,0 +1,63 @@
+#form-container {
+    width: 100%;
+    height: auto;
+}
+
+#dataQuery {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px; /* spacing between form-groups */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    width: auto; /* or a fixed width if needed */
+}
+
+#checkboxContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 4px; /* space between checkboxes */
+}
+
+#checkboxContainer {
+    display: none;
+}
+
+#submit {
+    white-space: normal;
+}
+
+#myChart {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 500px;
+}
+
+#chartContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+#download-button-container {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: left;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+html, body {
+    height: 100%;
+}

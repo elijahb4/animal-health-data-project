@@ -13,10 +13,28 @@
     <div class="content-area">
       <?php include 'components/header.php'; ?>
 
-      <main>
-        <?php
-          $page = $_GET['page'] ?? 'dashboard';
-          include "views/$page.php";
+    <main>
+    <?php
+        $allowedPages = [
+            'dashboard',
+            'analytics',
+            'our-dogs',
+            'records',
+            'health-data',
+            'trends',
+            'settings',
+            'notifications',
+            'search',
+        ];
+
+        $page = $_GET['page'] ?? 'dashboard';
+
+        $viewPath = "views/$page.php";
+        if (in_array($page, $allowedPages) && file_exists($viewPath)) {
+            include $viewPath;
+        } else {
+            include "views/404.php";
+        }
         ?>
       </main>
 

@@ -1,6 +1,6 @@
 let zhr = new XMLHttpRequest();
 
-zhr.open('GET', 'php_scripts/getDogs.php', true);
+zhr.open('GET', '/../php_scripts/getDogs.php', true);
 zhr.setRequestHeader('Accept', 'application/json');
 
 zhr.onload = function () {
@@ -11,7 +11,7 @@ zhr.onload = function () {
         response = JSON.parse(zhr.responseText);
 
         const selectElement = document.getElementById('selectDog');
-        console.log("getDogs.php returned:", response);
+
         response.forEach(dog => {
             const option = document.createElement('option');
             option.value = dog;
