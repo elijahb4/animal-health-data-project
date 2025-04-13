@@ -11,7 +11,7 @@ include 'components/footer.php';
 </div>
 
 <!-- JAVAAA SCRITP SUCKS -->
-<script src="../js/notifications.js"></script>
+<script src="js/notifications.js"></script>
 
 
 <?php include 'components/footer.php'; ?>
