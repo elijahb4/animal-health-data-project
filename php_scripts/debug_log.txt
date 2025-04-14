@@ -62,3 +62,7 @@ COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANI
 OUTPUT:
 [{"date": "2023-11-22", "value": 76.0}, {"date": "2023-11-23", "value": 75.97}, {"date": "2023-11-24", "value": 75.94}, {"date": "2023-11-25", "value": 75.9}, {"date": "2023-11-26", "value": 75.87}, {"date": "2023-11-27", "value": 75.84}, {"date": "2023-11-28", "value": 75.8}]
 
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-12-31" 7 2>&1
+OUTPUT:
+[{"date": "2023-12-31", "value": 46.79}, {"date": "2024-01-01", "value": 46.82}, {"date": "2024-01-02", "value": 46.85}, {"date": "2024-01-03", "value": 46.88}, {"date": "2024-01-04", "value": 46.91}, {"date": "2024-01-05", "value": 46.95}, {"date": "2024-01-06", "value": 46.98}]
+

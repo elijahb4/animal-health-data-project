@@ -1,10 +1,8 @@
-
-
 .footer {
     width: calc(100% - 220px);
     bottom: 0; /* dont touch */
     margin-left: 220px;
-    height: 64px;
+    min-height: 64px; /* has to be min not norm height because squishy nono */
     background-color: #ffffff;
     display: flex;
     align-items: center;
