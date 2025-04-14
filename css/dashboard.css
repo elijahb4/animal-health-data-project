@@ -1,8 +1,11 @@
 .dashboard-container {
   margin-left: 220px;
+  margin-top: auto;
+  padding-top: 100px;
+  margin-bottom: 80px;
   padding: 1rem 2rem;
   max-width: 100%;
-  padding: 80px 2rem 80px 2rem;
+  padding: 2rem;
 }
 
 /* ========== METRIC CARDS ========== */
@@ -18,12 +21,15 @@
 }
 
 .metric-card h4 {
+  margin-top: 0.2rem;
   margin-bottom: 0.5rem;
   font-size: 1rem;
   color: #555;
 }
 
 .metric-card p {
+  margin-top: 0.2rem;
+  margin-bottom: 0;
   font-size: 1.5rem;
   font-weight: bold;
   color: #1e90ff;
@@ -43,7 +49,7 @@
 }
 
 .trend-up {
-  color: rgb(0, 235, 0);
+  color: rgb(0, 201, 0);
 }
 
 .trend-down {
@@ -66,7 +72,6 @@
 
 /* ========== METRICS BAR ========== */
 .metrics-bar {
-  margin-top: 1.5rem;
   margin-bottom: 1.5rem;
   max-width: 1080px;
   display: flex;
@@ -207,7 +212,7 @@ canvas {
 
 .active-dot {
   background-color: #1e90ff;
-  transform: scale(1.3);
+  transform: scale(1.2);
 }
 
 /* ========== DOG HIGHLIGHT ========== */
@@ -219,8 +224,12 @@ canvas {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   max-width: 1080px;
-  margin-bottom: 24px;
+  margin-bottom: 1.5rem;
   gap: 16px;
+}
+
+.dog-highlight:hover {
+  transform: scale(1.01);
 }
 
 .dog-highlight img {
@@ -237,6 +246,11 @@ canvas {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   max-width: 1080px;
+  margin-bottom: 1.5rem;
+}
+
+.health-preview:hover {
+  transform: scale(1.01);
 }
 
 .health-preview ul {
@@ -331,9 +345,13 @@ canvas {
   border-radius: 16px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
   padding: 2rem;
-  max-width: 900px;
-  margin: 3rem auto;
+  max-width: 1080px;
+  margin-bottom: 1.5rem;
   position: relative;
+}
+
+.prediction-tile:hover {
+  transform: scale(1.01);
 }
 
 .prediction-header {

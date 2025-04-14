@@ -14,22 +14,18 @@ body {
     font-family: 'Segoe UI', sans-serif;
 }
 
-.dashboard-container {
+/* USE THIS FOR YOUR VIEWS. WRAP ALL YOUR CONTENT AROUND "view-container" AND STYLING DOESNT CONFLICT WITH COMPONENTS :)) */
+/*
+<div class="view-container">
+  *YOUR CONTENT*
+</div>
+*/
+.view-container {
   margin-left: 220px;
-  padding-left: 240px;
   padding-top: 100px;
-  padding-right: 20px;
-  padding-bottom: 80px;
-  min-height: calc(100vh - 80px);
-  background: #e9edf4;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  margin-top: auto;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 80px;
-  transition: margin-left 0.3s ease;
+  padding: 1rem 2rem;
+  max-width: 100%;
+  padding: 2rem;
 }
 
 .header, footer {

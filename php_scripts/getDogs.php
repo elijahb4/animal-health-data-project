@@ -13,7 +13,7 @@ if ($file === false) {
     die(json_encode(['error' => 'Unable to open file']));
 }
 
-$header = fgetcsv($file);
+$header = fgetcsv($file, 1000, ",", '"', "\\"); // error: the $escape parameter must be provided... (PHP 8+ requires it explicitly now apparently?)
 if ($header === false) {
     header('Content-Type: application/json');
     die(json_encode(['error' => 'Invalid CSV format']));

@@ -1,14 +1,64 @@
-COMMAND: python ../python/ml_predictor.py ../database/activityData.csv CANINE001 ^"Calorie Burn^" 2020-01-01 7
-OUTPUT: 
-COMMAND: python3 ../python/ml_predictor.py "../database/activityData.csv" "CANINE001" "Calorie Burn" "2020-01-13" 7 2>&1
-OUTPUT: Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Food Intake (calories)" "2023-11-01" 30 2>&1
+OUTPUT:
+[{"date": "2023-11-01", "value": 130.9}, {"date": "2023-11-02", "value": 131.01}, {"date": "2023-11-03", "value": 131.12}, {"date": "2023-11-04", "value": 131.24}, {"date": "2023-11-05", "value": 131.35}, {"date": "2023-11-06", "value": 131.47}, {"date": "2023-11-07", "value": 131.58}, {"date": "2023-11-08", "value": 131.7}, {"date": "2023-11-09", "value": 131.81}, {"date": "2023-11-10", "value": 131.92}, {"date": "2023-11-11", "value": 132.04}, {"date": "2023-11-12", "value": 132.15}, {"date": "2023-11-13", "value": 132.27}, {"date": "2023-11-14", "value": 132.38}, {"date": "2023-11-15", "value": 132.5}, {"date": "2023-11-16", "value": 132.61}, {"date": "2023-11-17", "value": 132.72}, {"date": "2023-11-18", "value": 132.84}, {"date": "2023-11-19", "value": 132.95}, {"date": "2023-11-20", "value": 133.07}, {"date": "2023-11-21", "value": 133.18}, {"date": "2023-11-22", "value": 133.29}, {"date": "2023-11-23", "value": 133.41}, {"date": "2023-11-24", "value": 133.52}, {"date": "2023-11-25", "value": 133.64}, {"date": "2023-11-26", "value": 133.75}, {"date": "2023-11-27", "value": 133.87}, {"date": "2023-11-28", "value": 133.98}, {"date": "2023-11-29", "value": 134.09}, {"date": "2023-11-30", "value": 134.21}]
 
-COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2021-01-13" 7 2>&1
-OUTPUT: Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE003" "Food Intake (calories)" "2023-11-01" 30 2>&1
+OUTPUT:
+[{"date": "2023-11-01", "value": 223.4}, {"date": "2023-11-02", "value": 223.58}, {"date": "2023-11-03", "value": 223.76}, {"date": "2023-11-04", "value": 223.95}, {"date": "2023-11-05", "value": 224.13}, {"date": "2023-11-06", "value": 224.31}, {"date": "2023-11-07", "value": 224.49}, {"date": "2023-11-08", "value": 224.67}, {"date": "2023-11-09", "value": 224.85}, {"date": "2023-11-10", "value": 225.03}, {"date": "2023-11-11", "value": 225.21}, {"date": "2023-11-12", "value": 225.39}, {"date": "2023-11-13", "value": 225.57}, {"date": "2023-11-14", "value": 225.75}, {"date": "2023-11-15", "value": 225.93}, {"date": "2023-11-16", "value": 226.11}, {"date": "2023-11-17", "value": 226.29}, {"date": "2023-11-18", "value": 226.48}, {"date": "2023-11-19", "value": 226.66}, {"date": "2023-11-20", "value": 226.84}, {"date": "2023-11-21", "value": 227.02}, {"date": "2023-11-22", "value": 227.2}, {"date": "2023-11-23", "value": 227.38}, {"date": "2023-11-24", "value": 227.56}, {"date": "2023-11-25", "value": 227.74}, {"date": "2023-11-26", "value": 227.92}, {"date": "2023-11-27", "value": 228.1}, {"date": "2023-11-28", "value": 228.28}, {"date": "2023-11-29", "value": 228.46}, {"date": "2023-11-30", "value": 228.64}]
 
-COMMAND: python3 "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2020-01-01" 7 2>&1
-OUTPUT: Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Food Intake (calories)" "2023-11-01" 30 2>&1
+OUTPUT:
+[{"date": "2023-11-01", "value": 130.9}, {"date": "2023-11-02", "value": 131.01}, {"date": "2023-11-03", "value": 131.12}, {"date": "2023-11-04", "value": 131.24}, {"date": "2023-11-05", "value": 131.35}, {"date": "2023-11-06", "value": 131.47}, {"date": "2023-11-07", "value": 131.58}, {"date": "2023-11-08", "value": 131.7}, {"date": "2023-11-09", "value": 131.81}, {"date": "2023-11-10", "value": 131.92}, {"date": "2023-11-11", "value": 132.04}, {"date": "2023-11-12", "value": 132.15}, {"date": "2023-11-13", "value": 132.27}, {"date": "2023-11-14", "value": 132.38}, {"date": "2023-11-15", "value": 132.5}, {"date": "2023-11-16", "value": 132.61}, {"date": "2023-11-17", "value": 132.72}, {"date": "2023-11-18", "value": 132.84}, {"date": "2023-11-19", "value": 132.95}, {"date": "2023-11-20", "value": 133.07}, {"date": "2023-11-21", "value": 133.18}, {"date": "2023-11-22", "value": 133.29}, {"date": "2023-11-23", "value": 133.41}, {"date": "2023-11-24", "value": 133.52}, {"date": "2023-11-25", "value": 133.64}, {"date": "2023-11-26", "value": 133.75}, {"date": "2023-11-27", "value": 133.87}, {"date": "2023-11-28", "value": 133.98}, {"date": "2023-11-29", "value": 134.09}, {"date": "2023-11-30", "value": 134.21}]
 
-COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2020-01-01" 7 2>&1
-OUTPUT: Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Food Intake (calories)" "2023-11-01" 1 2>&1
+OUTPUT:
+[{"date": "2023-11-01", "value": 130.9}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-11-01" 1 2>&1
+OUTPUT:
+[{"date": "2023-11-01", "value": 44.95}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-11-01" 30 2>&1
+OUTPUT:
+[{"date": "2023-11-01", "value": 44.95}, {"date": "2023-11-02", "value": 44.98}, {"date": "2023-11-03", "value": 45.01}, {"date": "2023-11-04", "value": 45.05}, {"date": "2023-11-05", "value": 45.08}, {"date": "2023-11-06", "value": 45.11}, {"date": "2023-11-07", "value": 45.14}, {"date": "2023-11-08", "value": 45.17}, {"date": "2023-11-09", "value": 45.2}, {"date": "2023-11-10", "value": 45.23}, {"date": "2023-11-11", "value": 45.26}, {"date": "2023-11-12", "value": 45.29}, {"date": "2023-11-13", "value": 45.32}, {"date": "2023-11-14", "value": 45.35}, {"date": "2023-11-15", "value": 45.38}, {"date": "2023-11-16", "value": 45.41}, {"date": "2023-11-17", "value": 45.44}, {"date": "2023-11-18", "value": 45.47}, {"date": "2023-11-19", "value": 45.51}, {"date": "2023-11-20", "value": 45.54}, {"date": "2023-11-21", "value": 45.57}, {"date": "2023-11-22", "value": 45.6}, {"date": "2023-11-23", "value": 45.63}, {"date": "2023-11-24", "value": 45.66}, {"date": "2023-11-25", "value": 45.69}, {"date": "2023-11-26", "value": 45.72}, {"date": "2023-11-27", "value": 45.75}, {"date": "2023-11-28", "value": 45.78}, {"date": "2023-11-29", "value": 45.81}, {"date": "2023-11-30", "value": 45.84}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-11-01" 7 2>&1
+OUTPUT:
+[{"date": "2023-11-01", "value": 44.95}, {"date": "2023-11-02", "value": 44.98}, {"date": "2023-11-03", "value": 45.01}, {"date": "2023-11-04", "value": 45.05}, {"date": "2023-11-05", "value": 45.08}, {"date": "2023-11-06", "value": 45.11}, {"date": "2023-11-07", "value": 45.14}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Food Intake (calories)" "2023-11-01" 7 2>&1
+OUTPUT:
+[{"date": "2023-11-01", "value": 130.9}, {"date": "2023-11-02", "value": 131.01}, {"date": "2023-11-03", "value": 131.12}, {"date": "2023-11-04", "value": 131.24}, {"date": "2023-11-05", "value": 131.35}, {"date": "2023-11-06", "value": 131.47}, {"date": "2023-11-07", "value": 131.58}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Water Intake (ml)" "2023-11-01" 7 2>&1
+OUTPUT:
+[{"date": "2023-11-01", "value": -39.72}, {"date": "2023-11-02", "value": -39.78}, {"date": "2023-11-03", "value": -39.83}, {"date": "2023-11-04", "value": -39.89}, {"date": "2023-11-05", "value": -39.95}, {"date": "2023-11-06", "value": -40.0}, {"date": "2023-11-07", "value": -40.06}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-11-01" 7 2>&1
+OUTPUT:
+[{"date": "2023-11-01", "value": 44.95}, {"date": "2023-11-02", "value": 44.98}, {"date": "2023-11-03", "value": 45.01}, {"date": "2023-11-04", "value": 45.05}, {"date": "2023-11-05", "value": 45.08}, {"date": "2023-11-06", "value": 45.11}, {"date": "2023-11-07", "value": 45.14}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-11-01" 3 2>&1
+OUTPUT:
+[{"date": "2023-11-01", "value": 44.95}, {"date": "2023-11-02", "value": 44.98}, {"date": "2023-11-03", "value": 45.01}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE002" "Calorie Burn" "2023-11-01" 3 2>&1
+OUTPUT:
+[{"date": "2023-11-01", "value": 17.84}, {"date": "2023-11-02", "value": 17.84}, {"date": "2023-11-03", "value": 17.84}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE003" "Calorie Burn" "2023-11-01" 3 2>&1
+OUTPUT:
+[{"date": "2023-11-01", "value": -5.13}, {"date": "2023-11-02", "value": -5.17}, {"date": "2023-11-03", "value": -5.22}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE003" "Heart Rate (bpm)" "2023-11-01" 3 2>&1
+OUTPUT:
+[{"date": "2023-11-01", "value": 76.71}, {"date": "2023-11-02", "value": 76.67}, {"date": "2023-11-03", "value": 76.64}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE003" "Heart Rate (bpm)" "2023-11-22" 3 2>&1
+OUTPUT:
+[{"date": "2023-11-22", "value": 76.0}, {"date": "2023-11-23", "value": 75.97}, {"date": "2023-11-24", "value": 75.94}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE003" "Heart Rate (bpm)" "2023-11-22" 7 2>&1
+OUTPUT:
+[{"date": "2023-11-22", "value": 76.0}, {"date": "2023-11-23", "value": 75.97}, {"date": "2023-11-24", "value": 75.94}, {"date": "2023-11-25", "value": 75.9}, {"date": "2023-11-26", "value": 75.87}, {"date": "2023-11-27", "value": 75.84}, {"date": "2023-11-28", "value": 75.8}]
 

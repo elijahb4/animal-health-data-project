@@ -4,8 +4,11 @@ from datetime import timedelta
 from sklearn.linear_model import LinearRegression
 import json
 import sys
+import warnings
+warnings.filterwarnings("ignore") # get rid of annoying sklearn warning
 
-def predict_metric(csv_path, dog_id, column, start_date, days, debug=False):
+# use only last 30 days of TRAINING data to make model more reactive!!! (DEFAULT)
+def predict_metric(csv_path, dog_id, column, start_date, days, training_days=30, debug=False): # leave last param alone please thanks
     df = pd.read_csv(csv_path)
     df['Date'] = pd.to_datetime(df['Date'], format='%d-%m-%Y')
     df = df[df['DogID'] == dog_id]
@@ -18,9 +21,9 @@ def predict_metric(csv_path, dog_id, column, start_date, days, debug=False):
     df.columns = ['Date', column]
     df = df.dropna()
 
-    # use only last 30 days of data to make model more reactive!!!
-    recent_df = df.tail(30).copy()
-    recent_df['DayIndex'] = np.arange(len(recent_df))
+    # use only last 30 days of TRAINING data to make model more reactive!!!
+    recent_df = df.tail(training_days).copy()
+    recent_df['DayIndex'] = np.arange(len(recent_df)) # map dates to nums
     X = recent_df[['DayIndex']]
     y = recent_df[column]
 
@@ -28,13 +31,13 @@ def predict_metric(csv_path, dog_id, column, start_date, days, debug=False):
     model.fit(X, y)
 
     if debug:
-        print("Filtered rows for training:", len(df))
-        print("Training dates:", df['Date'].dt.strftime('%Y-%m-%d').tolist())
-        print("Training values:", df[column].tolist())
+        print("Filtered rows for training:", len(df), file=sys.stderr)
+        print("Training dates:", df['Date'].dt.strftime('%Y-%m-%d').tolist(), file=sys.stderr)
+        print("Training values:", df[column].tolist(), file=sys.stderr)
 
     start_dt = pd.to_datetime(start_date)
     start_index = (start_dt - df['Date'].min()).days
-    future_indices = np.array([start_index + i for i in range(days)]).reshape(-1, 1)
+    future_indices = np.array([start_index + i for i in range(days)]).reshape(-1, 1) # time series linear regression
     future_dates = [start_dt + timedelta(days=i) for i in range(days)]
     predictions = model.predict(future_indices)
 
@@ -49,5 +52,6 @@ if __name__ == '__main__':
     start_date = sys.argv[4] if len(sys.argv) > 4 else '2024-03-30'
     days = int(sys.argv[5]) if len(sys.argv) > 5 else 7
 
-    result = predict_metric(csv_path, dog_id, column, start_date, days, debug=True)
+    training_days = int(sys.argv[6]) if len(sys.argv) > 6 else 30
+    result = predict_metric(csv_path, dog_id, column, start_date, days, training_days, debug=False) # leave last param alone please thanks
     print(result)

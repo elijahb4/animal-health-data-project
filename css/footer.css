@@ -1,9 +1,8 @@
 
 
 .footer {
-    position: fixed;
     width: calc(100% - 220px);
-    bottom: 0;
+    bottom: 0; /* dont touch */
     margin-left: 220px;
     height: 64px;
     background-color: #ffffff;

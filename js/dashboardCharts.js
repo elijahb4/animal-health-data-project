@@ -238,6 +238,7 @@ function updateTitle(tileId, column) {
   }
 }
 
+// METRIC CARDS
 async function updateMetricCards() {
   const dogId = 'CANINE001';
 
@@ -287,24 +288,20 @@ async function updateMetricCards() {
     if (prevVal !== null && currentAvg !== null) {
       const diff = currentAvg - prevVal;
       const absDiff = Math.abs(diff).toFixed(1);
-
-      let emoji = '', className = '', text = '';
+      let className = '', text = '';
 
       if (diff > 0.1) {
-        emoji = '🔼';
         className = 'trend-up';
         text = `+${absDiff}`;
       } else if (diff < -0.1) {
-        emoji = '🔽';
         className = 'trend-down';
         text = `-${absDiff}`;
       } else {
-        emoji = '➖';
         className = 'trend-same';
         text = `0.0`;
       }
 
-      trendElem.textContent = `${emoji} ${text}`;
+      trendElem.textContent = text;
       trendElem.className = `trend-indicator ${className}`;
     } else {
       trendElem.textContent = '';
@@ -313,24 +310,26 @@ async function updateMetricCards() {
   });
 }
 
-async function setDatePickerLimits() {
+async function setDatePickerLimits(inputId = 'datePicker') {
   try {
     const res = await fetch('php_scripts/getDates.php');
     const data = await res.json();
 
     if (data.minDate && data.maxDate) {
-      const min = data.minDate.split('-').reverse().join('-'); // to yyyy-mm-dd
+      const min = data.minDate.split('-').reverse().join('-'); // dd-mm-yyyy to yyyy-mm-dd
       const max = data.maxDate.split('-').reverse().join('-');
 
-      const dateInput = document.getElementById('datePicker');
-      dateInput.min = min;
-      dateInput.max = max;
-      dateInput.value = max; // default to latest date!!!
+      const dateInput = document.getElementById(inputId);
+      if (dateInput) {
+        dateInput.min = min;
+        dateInput.max = max;
+        dateInput.value = max; // default to latest date!!!
+      }
     } else {
-      console.error("Missing minDate or maxDate in getDates.php response:", data);
+      console.error("missing minDate or maxDate in getDates.php response:", data);
     }
   } catch (err) {
-    console.error("Failed to fetch date limits:", err);
+    console.error("failed to fetch date limits:", err);
   }
 }
 
@@ -341,6 +340,7 @@ document.getElementById('mlPredictionForm').addEventListener('submit', async fun
   const metric = document.getElementById('mlMetric').value;
   const startDate = document.getElementById('mlStart').value;
   const days = parseInt(document.getElementById('mlDays').value);
+  const trainingDays = parseInt(document.getElementById('mlTrainingDays').value);
 
   const labels = [];
   const values = [];
@@ -355,29 +355,36 @@ document.getElementById('mlPredictionForm').addEventListener('submit', async fun
         dogId,
         metric,
         startDate,
-        days
+        days,
+        trainingDays
       })
     });
-
-    // 👇 read text first to inspect it
+  
     const responseText = await response.text();
     console.log('raw response from PHP:', responseText);
-
-    const result = JSON.parse(responseText); // 👈 only parse after logging
-
+  
+    const result = JSON.parse(responseText);
+  
+    if (!Array.isArray(result)) {
+      console.error('Prediction error:', result.error ?? 'Unexpected response');
+      alert(result.error ?? 'Prediction failed. See console for details.');
+      return;
+    }
+  
     result.forEach(entry => {
       labels.push(new Date(entry.date).toLocaleDateString('en-GB'));
       values.push(entry.value);
     });
-
+  
   } catch (err) {
     console.error('prediction fetch error', err);
-    return; // stop here if something went wrong
+    alert('An error occurred while generating predictions.');
+    return;
   }
 
   const ctx = document.getElementById('mlPredictionChart').getContext('2d');
 
-  // ✅ safe check before destroy
+  // safe check before destroy
   if (window.mlPredictionChart && typeof window.mlPredictionChart.destroy === 'function') {
     window.mlPredictionChart.destroy();
   }
@@ -441,7 +448,11 @@ document.addEventListener('DOMContentLoaded', () => {
   startCarousel('vitalsChart');
   startCarousel('behaviourChart');
   updateMetricCards();
-  setDatePickerLimits();
+
+  // limit both date inputs
+  setDatePickerLimits('datePicker');
+  setDatePickerLimits('mlStart');
+
   populateMlDogDropdown();
 });
 

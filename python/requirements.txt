@@ -1,0 +1,14 @@
+here lies the necessary requirements to run this feature:
+1. ensure python is installed and added to your system PATH. usually this can be automatically done in the installation when selected "select the Add Python x.x to PATH".
+    this can be done by referencing the directory of your python installation, commonly these 2 paths by default (replace [NAME] with your name as seen in your windows file explorer): 
+        "C:\Users\[NAME]\AppData\Local\Programs\Python\Python313"
+        "C:\Users\[NAME]\AppData\Local\Programs\Python\Python313\Scripts"
+
+    search environment variables in windows search select "Edit the system environment variables" and go within the advanced tab, select "Environment Variables".
+    within the system variables, select "Path" and "Edit" then "New", referencing your python and python scripts directories.
+    check your python is correctly installed by pasting this in Command Prompt without speech marks:
+        "python --version"
+
+2. required packages are installed:
+    run this command in Command Prompt without speech marks:
+        "pip install pandas numpy scikit-learn"

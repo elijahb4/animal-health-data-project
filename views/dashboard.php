@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="css/dashboard.css">
 
-<div class="dashboard-container">
+<div class="view-container">
   <!-- dashboard overview metrics -->
   <div class="metrics-bar">
     <div class="metric-card">
@@ -149,19 +149,19 @@
   <section class="prediction-tile">
     <div class="prediction-header">
       <h3>Predicted Trends</h3>
-      <p>Forecast future values using machine learning</p>
+      <p>Forecast future values using the Linear Regression Machine Learning model in a time series.</p>
     </div>
 
     <form id="mlPredictionForm" class="prediction-form">
       <div>
         <label for="mlDog">Dog ID:</label>
-        <select id="mlDog"></select>
+        <select id="mlDog" required></select>
       </div>
 
       <div>
         <label for="mlMetric">Metric:</label>
-        <select id="mlMetric">
-          <option value="Calorie Burn">Calorie Burn</option>
+        <select id="mlMetric" required>
+          <option value="Calorie Burn" selected>Calorie Burn</option>
           <option value="Heart Rate (bpm)">Heart Rate (bpm)</option>
           <option value="Food Intake (calories)">Food Intake</option>
           <option value="Water Intake (ml)">Water Intake</option>
@@ -170,12 +170,17 @@
 
       <div>
         <label for="mlStart">Start Date:</label>
-        <input type="date" id="mlStart">
+        <input type="date" id="mlStart" required>
+      </div>
+
+      <div>
+        <label for="mlTrainingDays">Training Days</label>
+        <input type="number" id="mlTrainingDays" name="mlTrainingDays" min="7" max="90" value="30" required>
       </div>
 
       <div>
         <label for="mlDays">Predict Next (Days):</label>
-        <select id="mlDays">
+        <select id="mlDays" required>
           <option value="1">1</option>
           <option value="3">3</option>
           <option value="7" selected>7</option>
