@@ -26,7 +26,18 @@ $validBehaviours = ["Normal", "Sleeping", "Walking", "Playing", "Eating"];
 foreach ($data as $row) {
     $entry = array_combine($headers, $row);        // Combine headers and row into associative array
     $dog = $entry['DogID'];                        // Dog ID for this row
-    $time = "{$entry['Date']} {$entry['Hour']}:00:00"; // Combine date and hour
+
+    // === Format timestamp: dd/mm/yyyy or dd-mm-yyyy + hour → yyyy-mm-dd hh:mm ===
+$rawDate = $entry['Date']; // e.g. "12/04/2025" or "12-04-2025"
+$dateParts = preg_split('/[\/\-]/', $rawDate); // handle both "/" and "-" as separators
+if (count($dateParts) === 3) {
+    $formattedDate = "{$dateParts[2]}-{$dateParts[1]}-{$dateParts[0]}"; // "2025-04-12"
+} else {
+    $formattedDate = $rawDate; // fallback
+}
+$hour = str_pad($entry['Hour'], 2, '0', STR_PAD_LEFT); // Pad single digit hour with 0
+$timestamp = "{$formattedDate} {$hour}:00"; // Final format: "2025-04-12 08:00"
+
 
     // === HEART RATE CHECK ===
     if (isset($entry['Heart Rate (bpm)']) && is_numeric($entry['Heart Rate (bpm)'])) {
@@ -36,7 +47,8 @@ foreach ($data as $row) {
                 "title" => "Abnormal Heart Rate",
                 "dog" => $dog,
                 "read" => false,
-                "datetime" => $time,
+                "datetime" => $timestamp,
+                "timestamp" => $timestamp,
                 "reason" => "Heart Rate = {$rate}, expected 60–130 bpm"
             ];
         }
@@ -50,7 +62,8 @@ foreach ($data as $row) {
                 "title" => "Unusual Calorie Burn",
                 "dog" => $dog,
                 "read" => false,
-                "datetime" => $time,
+                "datetime" => $timestamp,
+                "timestamp" => $timestamp,
                 "reason" => "Calorie Burn = {$cal}, expected ≤ 250"
             ];
         }
@@ -62,7 +75,8 @@ foreach ($data as $row) {
             "title" => "Inactivity Detected",
             "dog" => $dog,
             "read" => false,
-            "datetime" => $time,
+            "datetime" => $timestamp,
+            "timestamp" => $timestamp,
             "reason" => "Activity Level is 0 steps"
         ];
     }
@@ -75,7 +89,8 @@ foreach ($data as $row) {
                 "title" => "Abnormal Temperature",
                 "dog" => $dog,
                 "read" => false,
-                "datetime" => $time,
+                "datetime" => $timestamp,
+                "timestamp" => $timestamp,
                 "reason" => "Temperature = {$temp}°C, expected 20–35°C"
             ];
         }
@@ -89,7 +104,8 @@ foreach ($data as $row) {
                 "title" => "Abnormal Breathing Rate",
                 "dog" => $dog,
                 "read" => false,
-                "datetime" => $time,
+                "datetime" => $timestamp,
+                "timestamp" => $timestamp,
                 "reason" => "Breathing Rate = {$breath}, expected 12–30 breaths/min"
             ];
         }
@@ -101,7 +117,8 @@ foreach ($data as $row) {
             "title" => "No Food Intake",
             "dog" => $dog,
             "read" => false,
-            "datetime" => $time,
+            "datetime" => $timestamp,
+            "timestamp" => $timestamp,
             "reason" => "Food Intake = 0 calories"
         ];
     }
@@ -112,7 +129,8 @@ foreach ($data as $row) {
             "title" => "No Water Intake",
             "dog" => $dog,
             "read" => false,
-            "datetime" => $time,
+            "datetime" => $timestamp,
+            "timestamp" => $timestamp,
             "reason" => "Water Intake = 0 ml"
         ];
     }
@@ -123,7 +141,8 @@ foreach ($data as $row) {
             "title" => "Unusual Behaviour Pattern",
             "dog" => $dog,
             "read" => false,
-            "datetime" => $time,
+            "datetime" => $timestamp,
+            "timestamp" => $timestamp,
             "reason" => "Unexpected behaviour: '{$entry['Behaviour Pattern']}'"
         ];
     }
