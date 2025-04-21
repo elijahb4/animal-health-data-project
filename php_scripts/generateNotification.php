@@ -3,11 +3,14 @@
 // detects out-of-range values, and generates object-based
 // notifications saved in JSON format.
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // === File Paths ===
 $csvFile = '../database/activityData.csv';        // Source data file
-$jsonFile = '../database/notifications.json';      // Output file for notifications
+$jsonFile = '../database/notifications.json';     // Output file for notifications
 
-$notifications = []; // List to hold all generated notifications
+$notifications = [];
 
 // === Check if the CSV exists ===
 if (!file_exists($csvFile)) {
@@ -15,29 +18,60 @@ if (!file_exists($csvFile)) {
 }
 
 // === Read and Parse CSV ===
-$data = array_map('str_getcsv', file($csvFile));   // Convert CSV rows to arrays
-$headers = array_map('trim', $data[0]);            // Extract and clean the header row
-unset($data[0]);                                   // Remove header from data rows
+$data = array_map('str_getcsv', file($csvFile));
+$headers = array_map('trim', $data[0]);
+unset($data[0]); // Remove header
 
-// === Define valid values for behaviour pattern ===
 $validBehaviours = ["Normal", "Sleeping", "Walking", "Playing", "Eating"];
 
-// === Loop through each row of data ===
+// === Step 2: Dynamically find the latest timestamp in the data ===
+$latestTimestamp = null;
+
 foreach ($data as $row) {
-    $entry = array_combine($headers, $row);        // Combine headers and row into associative array
-    $dog = $entry['DogID'];                        // Dog ID for this row
+    $entry = array_combine($headers, $row);
+    $rawDate = $entry['Date'];
+    $dateParts = preg_split('/[\/\-]/', $rawDate);
+    if (count($dateParts) === 3) {
+        $formattedDate = "{$dateParts[2]}-{$dateParts[1]}-{$dateParts[0]}";
+    } else {
+        continue;
+    }
+    $hour = str_pad($entry['Hour'], 2, '0', STR_PAD_LEFT);
+    $timestampStr = "{$formattedDate} {$hour}:00";
 
-    // === Format timestamp: dd/mm/yyyy or dd-mm-yyyy + hour → yyyy-mm-dd hh:mm ===
-$rawDate = $entry['Date']; // e.g. "12/04/2025" or "12-04-2025"
-$dateParts = preg_split('/[\/\-]/', $rawDate); // handle both "/" and "-" as separators
-if (count($dateParts) === 3) {
-    $formattedDate = "{$dateParts[2]}-{$dateParts[1]}-{$dateParts[0]}"; // "2025-04-12"
-} else {
-    $formattedDate = $rawDate; // fallback
+    $dt = DateTime::createFromFormat('Y-m-d H:i', $timestampStr);
+    if ($dt && ($latestTimestamp === null || $dt > $latestTimestamp)) {
+        $latestTimestamp = $dt;
+    }
 }
-$hour = str_pad($entry['Hour'], 2, '0', STR_PAD_LEFT); // Pad single digit hour with 0
-$timestamp = "{$formattedDate} {$hour}:00"; // Final format: "2025-04-12 08:00"
 
+if (!$latestTimestamp) {
+    die("No valid timestamps found in CSV.");
+}
+
+$cutoff = (clone $latestTimestamp)->modify('-7 days');
+
+// === Step 3: Main loop to generate notifications ===
+foreach ($data as $row) {
+    $entry = array_combine($headers, $row);
+    $dog = $entry['DogID'];
+
+    // Format timestamp
+    $rawDate = $entry['Date'];
+    $dateParts = preg_split('/[\/\-]/', $rawDate);
+    if (count($dateParts) === 3) {
+        $formattedDate = "{$dateParts[2]}-{$dateParts[1]}-{$dateParts[0]}";
+    } else {
+        $formattedDate = $rawDate;
+    }
+    $hour = str_pad($entry['Hour'], 2, '0', STR_PAD_LEFT);
+    $timestamp = "{$formattedDate} {$hour}:00";
+
+    // ✅ Step 4: Dynamic filter
+    $notificationTime = DateTime::createFromFormat('Y-m-d H:i', $timestamp);
+    if (!$notificationTime || $notificationTime < $cutoff) {
+        continue;
+    }
 
     // === HEART RATE CHECK ===
     if (isset($entry['Heart Rate (bpm)']) && is_numeric($entry['Heart Rate (bpm)'])) {
@@ -147,11 +181,16 @@ $timestamp = "{$formattedDate} {$hour}:00"; // Final format: "2025-04-12 08:00"
         ];
     }
 }
+ 
+// Sort notifications by timestamp (newest first)
+usort($notifications, function ($a, $b) {
+    return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+});
 
-// === Save All Notifications to a JSON File ===
+// === Save to JSON ===
 file_put_contents($jsonFile, json_encode($notifications, JSON_PRETTY_PRINT));
 
-// === Output JSON Response (for testing/debug) ===
+// === Response ===
 echo json_encode([
     "status" => "done",
     "count" => count($notifications)
