@@ -3,6 +3,13 @@
 // detects out-of-range values, and generates object-based
 // notifications saved in JSON format.
 
+// WORK TO BE DONE: - style notifications - currently hard to look at (wall of text), make them divisible and easy to see.
+//                  - connect the dashboard tile that displays health alerts with your notifications - make it display like the latest few notifications dynamically.
+//                          - add a link to this tile like ive done with the graphs to jump to your notification view page.
+//                  - optionally, add dropdown for notification date range from current date (make sure current date is the last date in the csv file, which is 31/12/23, 
+//                          do this dynamically, dont hardcode this date.)
+//                  - no logic for reading notifications? cannot change status of notifications. maybe a button that dismisses one notification at a time?
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 

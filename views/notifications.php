@@ -1,4 +1,4 @@
-<div class="view-container">
+<div class="view-container"> <!-- inside view container as implemented in global styles -->
     <h2>📢 Notifications</h2>
     <div id="notificationList" class="health-preview"></div>
 </div>
