@@ -41,6 +41,15 @@ main {
   padding-bottom: 64px;
   padding: 2rem;
   max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* importanto */
+  text-align: center;
+}
+
+.view-container > * {
+  width: 100%;
+  max-width: 1080px;
 }
 
 .header, footer {
