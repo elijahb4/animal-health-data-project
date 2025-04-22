@@ -52,6 +52,59 @@ main {
   max-width: 1080px;
 }
 
+/* GLOBAL BUTTON use this for your buttons, consistent design across the views */
+.btn {
+  background-color: #0a5ea8;
+  color: white;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+  background-color: #084c87;
+  transform: scale(1.05);
+}
+
+/* CARD/TILE THEME IN DASHBOARD, FEEL FREE TO USE THIS WHEREVER YOU WANT. SIMPLE EFFECTIVE TILES FOR LAYOUT. */
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  max-width: 1080px;
+}
+
+.card:hover {
+  transform: scale(1.01);
+}
+
+/* BASIC SECTION HEADER, A TITLE FOR YOUR SECTIONS IN VIEWS. */
+.section-label {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+  padding-left: 1rem;
+}
+
+/* GENERIC GLOBAL INPUT FIELD STYLING BELOW */
+input[type="text"],
+input[type="date"],
+input[type="number"],
+select {
+  padding: 8px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .header, footer {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }

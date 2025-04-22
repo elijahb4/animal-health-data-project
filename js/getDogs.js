@@ -1,7 +1,7 @@
 let zhr = new XMLHttpRequest();
 
-zhr.open('GET', 'php_scripts/getDogs.php', true);
-zhr.setRequestHeader('Accept', 'application/json');
+zhr.open('GET', 'php_scripts/getDogs.php', true); // absolute works ig?
+zhr.setRequestHeader('Accept', '../application/json');
 
 zhr.onload = function () {
     if (zhr.readyState === zhr.DONE) {
