@@ -102,3 +102,10 @@ COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANI
 OUTPUT:
 [{"date": "2023-12-31", "value": 46.79}, {"date": "2024-01-01", "value": 46.82}, {"date": "2024-01-02", "value": 46.85}, {"date": "2024-01-03", "value": 46.88}, {"date": "2024-01-04", "value": 46.91}, {"date": "2024-01-05", "value": 46.95}, {"date": "2024-01-06", "value": 46.98}]
 
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-12-31" 7 2>&1
+OUTPUT:
+Traceback (most recent call last):
+  File "C:\Users\elija\source\repos\animal-health-data-project\python\ml_predictor.py", line 4, in <module>
+    from sklearn.linear_model import LinearRegression
+ModuleNotFoundError: No module named 'sklearn'
+
