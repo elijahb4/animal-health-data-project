@@ -3,34 +3,34 @@ from datetime import datetime, timedelta
 
 data = pd.read_csv('database/activityData.csv')
 
-# Create DataFrame
+# create DataFrame
 df = pd.DataFrame(data)
 
 print(df.head())
 
-# Initialize a start date
-start_date = datetime(2023, 1, 1)  # Example start date
+# initialize a start date
+start_date = datetime(2023, 1, 1) # example data!
 current_date = start_date
 
-# List to store the dates
+# list to store the dates
 dates = []
 
-# Iterate through the DataFrame
+# iterate through the DataFrame
 for index, row in df.iterrows():
     if row['Hour'] == 0 and row['DogID'] == 'ÇANINE001' and index != 0 and df.loc[index - 1, 'Hour'] == 23:
-        # Increment the date
+        # increment the date
         current_date += timedelta(days=1)
-    # Append the current date
+    # append the current date
     dates.append(current_date)
 
-# Add the date column to the DataFrame
+# add the date column to the DataFrame
 df['Date'] = dates
 
-# Combine Date and Hour into a single datetime column
+# combine Date and Hour into a single datetime column
 df['Date'] = pd.to_date(df['Date'].astype(str))
 
-# Set the datetime column as the index
+# set the datetime column as the index
 df.set_index('Date', inplace=True)
 
-# Display the DataFrame
+# display the DataFrame
 print(df)

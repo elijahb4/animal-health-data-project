@@ -1,9 +1,8 @@
 .header {
-    position: fixed;
-    left: 220px;
+    margin-left: 220px; /* sidebar consideration */
     width: calc(100% - 220px);
-    right: 0;
-    height: 80px;
+    top: 0; /* dont touch */
+    min-height: 80px; /* has to be min not norm height because squishy nono */
     background-color: #ffffff;
     display: flex;
     align-items: center;

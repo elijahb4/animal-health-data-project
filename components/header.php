@@ -8,7 +8,9 @@
 
     <div class="header-icons">
         <div class="icon-wrapper">
+            <a href="index.php?page=notifications">
             <img src="assets/header/notification.png" class="icon" alt="Notifications" />
+            </a>
         </div>
         <div class="icon-wrapper">
             <img src="assets/header/user.png" class="icon" alt="Account" />

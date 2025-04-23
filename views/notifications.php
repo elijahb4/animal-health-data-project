@@ -1,15 +1,7 @@
-<?php
-include 'header.php';
-include 'sidebar.php';
-?>
-
-<div class="dashboard-container">
+<div class="view-container"> <!-- inside view container as implemented in global styles -->
     <h2>📢 Notifications</h2>
     <div id="notificationList" class="health-preview"></div>
 </div>
 
-<!-- Link your JavaScript file -->
-<script src="../js/notifications.js"></script>
-
-
-<?php include 'footer.php'; ?>
+<!-- JAVAAA SCRITP SUCKS -->
+<script src="js/notifications.js"></script>
