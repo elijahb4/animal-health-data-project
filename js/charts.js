@@ -8,7 +8,7 @@ const container = document.getElementById("checkboxContainer");
 //const checkbox = document.getElementById("checkbox");
 //const checkboxValue = checkbox.value;
 const selectElement = document.getElementById('selectDog');
-const ctx = document.getElementById('myChart').getContext('2d');
+const ctx = document.getElementById('myChart').getContext('2d'); // this throws errors?
 const chatTypes = ['bar','line','bubble','doughnut','pie','polarArea','radar','scatter'];
 const chartTypeSelect = document.getElementById("chartTypes");
 const datePicker = document.getElementById("datePicker");
@@ -138,7 +138,7 @@ function formatDateToISO(dateString) {
 //invoked immediately to fetch the min and max dates from the database
 async function fetchDates() {
     try {
-        const response = await fetch('/../php_scripts/getDates.php');
+        const response = await fetch('../php_scripts/getDates.php');
         const data = await response.json();
 
         if (data.error) {
@@ -155,7 +155,7 @@ async function fetchDates() {
 }
 
 //Invoked immediately to populate the select column with the headers from the database
-yhr.open('GET', '/../php_scripts/getHeaders.php', true);
+yhr.open('GET', '../php_scripts/getHeaders.php', true);
 yhr.setRequestHeader('Accept', 'application.json')
 yhr.onload = function () {
     if (yhr.readyState === yhr.DONE) {
@@ -227,7 +227,7 @@ function queryData(event, minDate, maxDate) {
     labelKey = columnsToFetch;
     dataKey = columnsToFetch;
 
-    xhr.open('GET', `/../php_scripts/getData.php?${params.toString()}`, true);
+    xhr.open('GET', `../php_scripts/getData.php?${params.toString()}`, true);
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.send();
 }

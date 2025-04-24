@@ -8,7 +8,7 @@ $columns = $_GET['columns'] ?? [];
 $date = $_GET['Date'] ?? '';
 
 if (!is_array($columns)) {
-    $columns = [$columns]; // ensure it's always an array
+    $columns = [$columns]; // ensure its always an array
 }
 
 // file path
@@ -45,19 +45,23 @@ foreach ($columns as $column) {
     }
 }
 
-// filter data by DogID and date
+// grab rangeDays and convert date format
+$rangeDays = isset($_GET['rangeDays']) ? intval($_GET['rangeDays']) : 1;
+$startTimestamp = strtotime($date);
+$endTimestamp = strtotime("+$rangeDays days", $startTimestamp);
+
+// filter data
 $data = [];
 while (($row = fgetcsv($file, 0, ',', '"', '\\')) !== false) {
-    $matchesDog = $row[$dogId_index] === $dogID;
-    // $matchesDate = $date ? ($row[$date_index] === date("d-m-Y", strtotime($date))) : true;
+    $rowDogId = $row[$dogId_index];
+    $rowDateRaw = $row[$date_index]; // expect dd-mm-yyyy format
 
-    $rangeDays = isset($_GET['rangeDays']) ? intval($_GET['rangeDays']) : 1;
-    $startTimestamp = strtotime($date);
-    $endTimestamp = strtotime("+$rangeDays days", $startTimestamp);
+    // convert to timestamp
+    list($day, $month, $year) = explode('-', $rowDateRaw);
+    $rowTimestamp = strtotime("$year-$month-$day");
 
-    $rowTimestamp = strtotime(str_replace('/', '-', $row[$date_index]));
-
-    $matchesDate = $date ? ($rowTimestamp >= $startTimestamp && $rowTimestamp < $endTimestamp) : true;
+    $matchesDog = ($rowDogId === $dogID);
+    $matchesDate = ($rowTimestamp >= $startTimestamp && $rowTimestamp < $endTimestamp);
 
     if ($matchesDog && $matchesDate) {
         $filtered_row = [];

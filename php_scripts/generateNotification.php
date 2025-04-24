@@ -3,11 +3,21 @@
 // detects out-of-range values, and generates object-based
 // notifications saved in JSON format.
 
+// WORK TO BE DONE: - style notifications - currently hard to look at (wall of text), make them divisible and easy to see.
+//                  - connect the dashboard tile that displays health alerts with your notifications - make it display like the latest few notifications dynamically.
+//                          - add a link to this tile like ive done with the graphs to jump to your notification view page.
+//                  - optionally, add dropdown for notification date range from current date (make sure current date is the last date in the csv file, which is 31/12/23, 
+//                          do this dynamically, dont hardcode this date.)
+//                  - no logic for reading notifications? cannot change status of notifications. maybe a button that dismisses one notification at a time?
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // === File Paths ===
 $csvFile = '../database/activityData.csv';        // Source data file
-$jsonFile = '../database/notifications.json';      // Output file for notifications
+$jsonFile = '../database/notifications.json';     // Output file for notifications
 
-$notifications = []; // List to hold all generated notifications
+$notifications = [];
 
 // === Check if the CSV exists ===
 if (!file_exists($csvFile)) {
@@ -15,18 +25,60 @@ if (!file_exists($csvFile)) {
 }
 
 // === Read and Parse CSV ===
-$data = array_map('str_getcsv', file($csvFile));   // Convert CSV rows to arrays
-$headers = array_map('trim', $data[0]);            // Extract and clean the header row
-unset($data[0]);                                   // Remove header from data rows
+$data = array_map('str_getcsv', file($csvFile));
+$headers = array_map('trim', $data[0]);
+unset($data[0]); // Remove header
 
-// === Define valid values for behaviour pattern ===
 $validBehaviours = ["Normal", "Sleeping", "Walking", "Playing", "Eating"];
 
-// === Loop through each row of data ===
+// === Step 2: Dynamically find the latest timestamp in the data ===
+$latestTimestamp = null;
+
 foreach ($data as $row) {
-    $entry = array_combine($headers, $row);        // Combine headers and row into associative array
-    $dog = $entry['DogID'];                        // Dog ID for this row
-    $time = "{$entry['Date']} {$entry['Hour']}:00:00"; // Combine date and hour
+    $entry = array_combine($headers, $row);
+    $rawDate = $entry['Date'];
+    $dateParts = preg_split('/[\/\-]/', $rawDate);
+    if (count($dateParts) === 3) {
+        $formattedDate = "{$dateParts[2]}-{$dateParts[1]}-{$dateParts[0]}";
+    } else {
+        continue;
+    }
+    $hour = str_pad($entry['Hour'], 2, '0', STR_PAD_LEFT);
+    $timestampStr = "{$formattedDate} {$hour}:00";
+
+    $dt = DateTime::createFromFormat('Y-m-d H:i', $timestampStr);
+    if ($dt && ($latestTimestamp === null || $dt > $latestTimestamp)) {
+        $latestTimestamp = $dt;
+    }
+}
+
+if (!$latestTimestamp) {
+    die("No valid timestamps found in CSV.");
+}
+
+$cutoff = (clone $latestTimestamp)->modify('-7 days');
+
+// === Step 3: Main loop to generate notifications ===
+foreach ($data as $row) {
+    $entry = array_combine($headers, $row);
+    $dog = $entry['DogID'];
+
+    // Format timestamp
+    $rawDate = $entry['Date'];
+    $dateParts = preg_split('/[\/\-]/', $rawDate);
+    if (count($dateParts) === 3) {
+        $formattedDate = "{$dateParts[2]}-{$dateParts[1]}-{$dateParts[0]}";
+    } else {
+        $formattedDate = $rawDate;
+    }
+    $hour = str_pad($entry['Hour'], 2, '0', STR_PAD_LEFT);
+    $timestamp = "{$formattedDate} {$hour}:00";
+
+    // ✅ Step 4: Dynamic filter
+    $notificationTime = DateTime::createFromFormat('Y-m-d H:i', $timestamp);
+    if (!$notificationTime || $notificationTime < $cutoff) {
+        continue;
+    }
 
     // === HEART RATE CHECK ===
     if (isset($entry['Heart Rate (bpm)']) && is_numeric($entry['Heart Rate (bpm)'])) {
@@ -36,7 +88,8 @@ foreach ($data as $row) {
                 "title" => "Abnormal Heart Rate",
                 "dog" => $dog,
                 "read" => false,
-                "datetime" => $time,
+                "datetime" => $timestamp,
+                "timestamp" => $timestamp,
                 "reason" => "Heart Rate = {$rate}, expected 60–130 bpm"
             ];
         }
@@ -50,7 +103,8 @@ foreach ($data as $row) {
                 "title" => "Unusual Calorie Burn",
                 "dog" => $dog,
                 "read" => false,
-                "datetime" => $time,
+                "datetime" => $timestamp,
+                "timestamp" => $timestamp,
                 "reason" => "Calorie Burn = {$cal}, expected ≤ 250"
             ];
         }
@@ -62,7 +116,8 @@ foreach ($data as $row) {
             "title" => "Inactivity Detected",
             "dog" => $dog,
             "read" => false,
-            "datetime" => $time,
+            "datetime" => $timestamp,
+            "timestamp" => $timestamp,
             "reason" => "Activity Level is 0 steps"
         ];
     }
@@ -75,7 +130,8 @@ foreach ($data as $row) {
                 "title" => "Abnormal Temperature",
                 "dog" => $dog,
                 "read" => false,
-                "datetime" => $time,
+                "datetime" => $timestamp,
+                "timestamp" => $timestamp,
                 "reason" => "Temperature = {$temp}°C, expected 20–35°C"
             ];
         }
@@ -89,7 +145,8 @@ foreach ($data as $row) {
                 "title" => "Abnormal Breathing Rate",
                 "dog" => $dog,
                 "read" => false,
-                "datetime" => $time,
+                "datetime" => $timestamp,
+                "timestamp" => $timestamp,
                 "reason" => "Breathing Rate = {$breath}, expected 12–30 breaths/min"
             ];
         }
@@ -101,7 +158,8 @@ foreach ($data as $row) {
             "title" => "No Food Intake",
             "dog" => $dog,
             "read" => false,
-            "datetime" => $time,
+            "datetime" => $timestamp,
+            "timestamp" => $timestamp,
             "reason" => "Food Intake = 0 calories"
         ];
     }
@@ -112,7 +170,8 @@ foreach ($data as $row) {
             "title" => "No Water Intake",
             "dog" => $dog,
             "read" => false,
-            "datetime" => $time,
+            "datetime" => $timestamp,
+            "timestamp" => $timestamp,
             "reason" => "Water Intake = 0 ml"
         ];
     }
@@ -123,16 +182,22 @@ foreach ($data as $row) {
             "title" => "Unusual Behaviour Pattern",
             "dog" => $dog,
             "read" => false,
-            "datetime" => $time,
+            "datetime" => $timestamp,
+            "timestamp" => $timestamp,
             "reason" => "Unexpected behaviour: '{$entry['Behaviour Pattern']}'"
         ];
     }
 }
+ 
+// Sort notifications by timestamp (newest first)
+usort($notifications, function ($a, $b) {
+    return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+});
 
-// === Save All Notifications to a JSON File ===
+// === Save to JSON ===
 file_put_contents($jsonFile, json_encode($notifications, JSON_PRETTY_PRINT));
 
-// === Output JSON Response (for testing/debug) ===
+// === Response ===
 echo json_encode([
     "status" => "done",
     "count" => count($notifications)
