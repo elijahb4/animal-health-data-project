@@ -8,17 +8,11 @@ const queryForm = document.getElementById("dataQuery")
 const container = document.getElementById("checkboxContainer");
 const selectElement = document.getElementById('selectDog');
 const datePicker = document.getElementById("datePicker");
-const expandButton = document.getElementById('expandCheckboxes');
+const table = document.getElementById('csvTable');
+const downloadButtons = document.getElementById('download-button-container');
 
 //global event listeners
 queryForm.addEventListener("submit", queryData)
-
-//Expand/collapse the checkboxes
-expandButton.addEventListener('click', () => {
-  const isVisible = checkboxContainer.style.display === 'block';
-  container.style.display = isVisible ? 'none' : 'block';
-  expandButton.textContent = isVisible ? 'Show Options ▼' : 'Hide Options ▲';
-});
 
 async function getDogs () {
   try {
@@ -48,44 +42,10 @@ async function fetchDates() {
       } else {
           minDate = formatDateToISO(data.minDate);
           maxDate = formatDateToISO(data.maxDate);
-          //setDateRange(minDate, maxDate);
       }
   } catch (err) {
       console.error('Fetch error:', err);
   }
-}
-
-/*function setDateRange(minDate, maxDate) {
-  const datePicker = document.getElementById('datePicker');
-  datePicker.min = minDate;
-  datePicker.max = maxDate;
-  datePicker.value = maxDate; // default date is the latest entry in csv
-}*/
-
-async function selectdata() {
-  const response = await fetch('/../php_scripts/getHeaders.php');
-  const data = await response.json();
-  data.forEach(column => {
-    const wrapper = document.createElement('div');
-    wrapper.style.display = 'flex';
-    wrapper.style.alignItems = 'center';
-    wrapper.style.gap = '6px';
-    wrapper.style.marginBottom = '4px';
-        
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.id = column.toLowerCase();
-    checkbox.name = 'columns';
-    checkbox.value = column;
-        
-    const label = document.createElement('label');
-    label.htmlFor = checkbox.id;
-    label.textContent = column;
-        
-    wrapper.appendChild(checkbox);
-    wrapper.appendChild(label);
-    container.appendChild(wrapper);
-  })
 }
 
 function formatDateToISO(dateString) {
@@ -100,51 +60,122 @@ function addDaysToUTCDate(selectedDate, rangeDays) {
   return date;
 }
 
+//Export PDF
+function makePDF() {
+  const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4'
+    });
+    const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent);
+    const rows = Array.from(table.querySelectorAll('tbody tr')).map(row => {
+        return Array.from(row.querySelectorAll('td')).map(td => td.textContent);
+    });
+
+    const columnStyles = {};
+    headers.forEach((header, index) => {
+        columnStyles[index] = { cellWidth: 'auto', halign: 'center' };
+    });
+
+    doc.autoTable({
+        head: [headers],
+        body: rows,
+        startY: 20,
+        margin: { horizontal: 10 },
+        styles: { fontSize: 11, overflow: 'linebreak' },
+        headStyles: { fillColor: [14, 26, 64] },
+        columnStyles: columnStyles
+    });
+
+    doc.save('table.pdf');
+  };
+
+//Export PNG
+function downloadBitmap() {
+  html2canvas(table).then(canvas => {
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = 'table.png';
+      link.click();
+  });
+}
+
+//Export JSON Data
+function exportJSON() {
+  const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent);
+  const rows = Array.from(table.querySelectorAll('tbody tr'));
+
+  const data = rows.map(row => {
+      const cells = Array.from(row.querySelectorAll('td'));
+      const rowData = {};
+      cells.forEach((cell, i) => {
+          rowData[headers[i]] = cell.textContent;
+      });
+      return rowData;
+  });
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'table.json';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+//Export Data is CSV Format
+function exportCSV() {
+  const rows = Array.from(table.querySelectorAll('tr'));
+  const csv = rows.map(row => {
+      const cells = Array.from(row.querySelectorAll('th, td'));
+      return cells.map(cell => `"${cell.textContent}"`).join(',');
+  }).join('\n');
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'table.csv';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 async function queryData(event) {
   event.preventDefault();
-
-  const checkedBoxes = document.querySelectorAll('input[name="columns"]:checked');
-  const selectedCategories = Array.from(checkedBoxes).map(checkbox => checkbox.value);
-  
-  if (selectedCategories.length === 0) {
-      alert("Please select at least one category to filter by.");
-      return;
-  }
-  
   const startDate = datePicker.value;
   const rangeDays = parseInt(document.getElementById("rangeDays").value, 10);
-  /*if (isNaN(rangeDays)) {
-      alert("Please enter a valid number for the range of days.");
-      return;
-  }*/
+  const dog = selectElement.value;
   const endDate = addDaysToUTCDate(startDate, rangeDays);
 
   Papa.parse(CSV_PATH, {
     download: true,
-    header: false, // Treat rows as arrays
+    header: false,
     dynamicTyping: true,
     complete: function (results) {
       currentData = results.data;
-      headers = currentData.shift(); // Assume the first row contains headers
+      headers = currentData.shift();
   
       const dateIndex = headers.indexOf('Date');
       if (dateIndex === -1) {
         console.error("Date column not found in headers.");
         return;
       }
+      const dogIndex = headers.indexOf('DogID');
   
       filteredData = currentData.filter(row => {
-        const matchesCategories = selectedCategories.length === 0 || selectedCategories.some(category => {
-          const categoryIndex = headers.indexOf(category);
-          return categoryIndex !== -1 && row[categoryIndex] !== undefined;
-        });
         const rowDate = row[dateIndex];
         const matchesDate = (!startDate && !endDate) || (
           (!startDate || new Date(rowDate) >= new Date(startDate)) &&
           (!endDate || new Date(rowDate) <= new Date(endDate))
         );
-  
-        return matchesCategories && matchesDate;
+        const matchesDog = (row[dogIndex] == dog);
+
+        return matchesDate && matchesDog;
       });
   
       renderTable([headers, ...filteredData]);
@@ -157,7 +188,6 @@ async function queryData(event) {
 }
 
 function renderTable(data, sortColumn = null, sortDirection = 'asc') {
-  const table = document.getElementById('csvTable');
   table.innerHTML = '';
 
   if (!data || data.length === 0) {
@@ -212,10 +242,19 @@ function renderTable(data, sortColumn = null, sortDirection = 'asc') {
     tbody.appendChild(tr);
   });
   table.appendChild(tbody);
+
+  downloadButtons.innerHTML = `<button id="pdfButton" class="btn">Download as PDF</button> <button id="pngButton" class="btn">Download as PNG</button> <button id="jsonButton" class="btn">Export data as JSON</button> <button id="csvButton" class="btn">Export data as CSV</button>`;
+    const pdfButton = document.getElementById('pdfButton');
+    const pngButton = document.getElementById('pngButton');
+    const jsonButton = document.getElementById('jsonButton');
+    const csvButton = document.getElementById('csvButton');
+    pdfButton.addEventListener('click', makePDF);
+    pngButton.addEventListener('click', downloadBitmap);
+    jsonButton.addEventListener('click', () => exportJSON());
+    csvButton.addEventListener('click', () => exportCSV());
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   getDogs();
   fetchDates();
-  selectdata();
 });
