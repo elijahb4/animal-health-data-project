@@ -325,7 +325,7 @@ function makeChart(ctx, response, columns) {
         }
     });
 
-    downloadButtons.innerHTML = `<button id="pdfButton" class="btn">Download as PDF</button> <button id="pngButton" class="btn">Download as PNG</button> <button id="jsonButton" class="btn">Export data as JSON</button> <button id="csvButton" class="btn">Export data as CSV</button>`;
+    downloadButtons.innerHTML = `<button id="pdfButton">Download as PDF</button> <button id="pngButton">Download as PNG</button> <button id="jsonButton">Export data as JSON</button> <button id="csvButton">Export data as CSV</button>`;
     const pdfButton = document.getElementById('pdfButton');
     const pngButton = document.getElementById('pngButton');
     const jsonButton = document.getElementById('jsonButton');
