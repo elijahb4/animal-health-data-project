@@ -48,9 +48,13 @@ html, body {
     height: 100%;
 }
 
+/* fits into the card like a glove */
 table {
-    border-collapse: collapse;
     width: 100%;
+    max-width: 100%;
+    table-layout: auto;
+    font-size: 0.9rem;
+    border-collapse: collapse;
 }
 
 th, td {
