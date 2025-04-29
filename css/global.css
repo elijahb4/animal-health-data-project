@@ -37,8 +37,7 @@ main {
   min-height: calc(100vh - 80px - 64px); /* header + footer */
   flex: 1;
   margin-left: 220px;
-  padding-top: 100px;
-  padding-bottom: 64px;
+  /* margin-bottom: 64px; */
   padding: 2rem;
   max-width: 100%;
   display: flex;

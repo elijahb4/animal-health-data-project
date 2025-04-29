@@ -5,7 +5,8 @@ export function getColorForDog(dog) {
   if (!getColorForDog.colorIndex) getColorForDog.colorIndex = 0;
 
   if (!getColorForDog.colorMap[dog]) {
-    const color = CONFIG.colorPalette[getColorForDog.colorIndex % CONFIG.colorPalette.length];
+    const palette = CONFIG.customPalette.length > 0 ? CONFIG.customPalette : CONFIG.colorPalette;
+    const color = palette[getColorForDog.colorIndex % palette.length];
     getColorForDog.colorMap[dog] = color;
     getColorForDog.colorIndex++;
   }

@@ -67,16 +67,34 @@ export function buildChartConfig(data, column, chartType, isCategory) {
   }
 }
 
-export async function fetchAndDrawChart(canvasId, column, chartType, chartRegistry) {
-  const canvas = document.getElementById(canvasId);
+export async function fetchAndDrawChart(canvas, column, chartType, chartRegistry) {
+  console.log(`[fetchAndDrawChart] Drawing: ${canvas.id} for column "${column}"`);
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
+  const canvasId = canvas.id;
+
   if (chartRegistry[canvasId] && typeof chartRegistry[canvasId].destroy === 'function') {
     chartRegistry[canvasId].destroy();
   }
 
   const isCategory = isCategoryColumn(column);
 
+  try {
+    const data = await fetchData(column);
+    console.log(`[fetchAndDrawChart] Data length for "${column}":`, data.length);
+    console.log(data.slice(0, 5)); // show first 5 rows for sanity
+    if (!data.length) return;
+
+    const config = buildChartConfig(data, column, chartType, isCategory);
+    chartRegistry[canvasId] = new Chart(ctx, config);
+    canvas.classList.add('show');
+    console.log(`[Chart.js] Chart rendered on ${canvas.id}`);
+  } catch (err) {
+    console.error("Error drawing chart:", err);
+  }
+}
+
+async function fetchData(column) {
   try {
     let sendDate = currentStartDate;
     if (!sendDate) {
@@ -90,19 +108,22 @@ export async function fetchAndDrawChart(canvasId, column, chartType, chartRegist
       sendDate = end.toISOString().slice(0, 10);
     }
 
-    const dateParam = sendDate.split('-').reverse().join('-'); // to dd-mm-yyyy
+    const dateParam = sendDate.split('-').reverse().join('-');
     const params = new URLSearchParams();
     params.append('DogID', currentDog);
     params.append('Date', dateParam);
     params.append('rangeDays', currentRange);
     ['Date', 'Hour', 'DogID', column].forEach(c => params.append('columns[]', c));
 
-    const data = await (await fetch(`../php_scripts/getData.php?${params}`)).json();
-    if (!data.length) return;
-
-    const config = buildChartConfig(data, column, chartType, isCategory);
-    chartRegistry[canvasId] = new Chart(ctx, config);
+    const response = await fetch(`../php_scripts/getData.php?${params}`);
+    if (!response.ok) {
+      console.error('Failed fetching data', response.status);
+      return [];
+    }
+    console.log("[fetchData] API called with:", params.toString());
+    return await response.json();
   } catch (err) {
-    console.error("Error drawing chart:", err);
+    console.error('Fetch error:', err);
+    return [];
   }
 }

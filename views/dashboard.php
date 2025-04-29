@@ -30,7 +30,9 @@
 
   <!-- chart filter stuff -->
   <div class="card interactive-filter">
-    <h2 style="margin-bottom: 1rem; font-size: 1.2rem;">Dashboard Chart Filter</h2>
+    <div class="chart-header">
+      <h3>Dashboard Chart Filter</h3>
+    </div>
     <form id="carouselFilterForm">
       <div>
         <label for="selectDog">Dog ID:</label>
@@ -78,68 +80,59 @@
   </div>
 
   <!-- GRAPH tiles -->
-  <h2 class="section-label">Health Trends</h2>
   <div class="card chart-card" id="healthChartWrapper">
     <div class="chart-header">
       <h3 id="healthChartTitle">Health Trends</h3>
     </div>
+
     <div class="chart-style-controls">
-        <label for="healthChartType">Health Trends Chart Style:</label>
-        <select id="healthChartType" class="chart-style-dropdown"></select>
-        <button id="healthChartApplyBtn" class="btn">Apply</button>
-      </div>
-    <div class="chart-canvas-wrapper">
-      <button class="carousel-btn left" data-prev-tile="healthChart">‹</button>
-      <canvas id="healthChart" class="show"></canvas>
-      <button class="carousel-btn right" data-next-tile="healthChart">›</button>
+      <label for="healthChartType">Health Trends Chart Style:</label>
+      <select id="healthChartType" class="chart-style-dropdown"></select>
+      <button id="healthChartApplyBtn" class="btn">Apply</button>
     </div>
-    <div class="chart-dots" id="healthChartDots"></div>
+
+    <div class="horizontal-scroll-wrapper" id="healthChartScrollWrapper"></div>
+
     <div class="chart-links">
       <a href="index.php?page=analytics" class="chart-link">📊 See full analytics</a>
       <a href="index.php?page=records" class="chart-link">📁 Explore health records</a>
       <a href="index.php?page=health-trends" class="chart-link">📈 Study health trends</a>
     </div>
   </div>
-  
-  <h2 class="section-label">Vitals Overview</h2>
+
   <div class="card chart-card" id="vitalsChartWrapper">
     <div class="chart-header">
       <h3 id="vitalsChartTitle">Vitals Overview</h3>
     </div>
+
     <div class="chart-style-controls">
-        <label for="vitalsChartType">Vitals Overview Chart Style:</label>
-        <select id="vitalsChartType" class="chart-style-dropdown"></select>
-        <button id="vitalsChartApplyBtn" class="btn">Apply</button>
-      </div>
-    <div class="chart-canvas-wrapper">
-      <button class="carousel-btn left" data-prev-tile="vitalsChart">‹</button>
-      <canvas id="vitalsChart" class="show"></canvas>
-      <button class="carousel-btn right" data-next-tile="vitalsChart ">›</button>
+      <label for="vitalsChartType">Vitals Overview Chart Style:</label>
+      <select id="vitalsChartType" class="chart-style-dropdown"></select>
+      <button id="vitalsChartApplyBtn" class="btn">Apply</button>
     </div>
-    <div class="chart-dots" id="vitalsChartDots"></div>
+
+    <div class="horizontal-scroll-wrapper" id="vitalsChartScrollWrapper"></div>
+
     <div class="chart-links">
       <a href="index.php?page=analytics" class="chart-link">📊 See full analytics</a>
       <a href="index.php?page=records" class="chart-link">📁 Explore health records</a>
       <a href="index.php?page=health-trends" class="chart-link">📈 Study health trends</a>
     </div>
   </div>
-  
-  <h2 class="section-label">Behaviour Insights</h2>
+
   <div class="card chart-card" id="behaviourChartWrapper">
     <div class="chart-header">
       <h3 id="behaviourChartTitle">Behaviour & Movement</h3>
     </div>
+
     <div class="chart-style-controls">
-        <label for="behaviourChartType">Behaviour & Movement Chart Style:</label>
-        <select id="behaviourChartType" class="chart-style-dropdown"></select>
-        <button id="behaviourChartApplyBtn" class="btn">Apply</button>
-      </div>
-    <div class="chart-canvas-wrapper">
-      <button class="carousel-btn left" data-prev-tile="behaviourChart">‹</button>
-      <canvas id="behaviourChart" class="show"></canvas>
-      <button class="carousel-btn right" data-next-tile="behaviourChart">›</button>
+      <label for="behaviourChartType">Behaviour & Movement Chart Style:</label>
+      <select id="behaviourChartType" class="chart-style-dropdown"></select>
+      <button id="behaviourChartApplyBtn" class="btn">Apply</button>
     </div>
-    <div class="chart-dots" id="behaviourChartDots"></div>
+
+    <div class="horizontal-scroll-wrapper" id="behaviourChartScrollWrapper"></div>
+
     <div class="chart-links">
       <a href="index.php?page=analytics" class="chart-link">📊 See full analytics</a>
       <a href="index.php?page=records" class="chart-link">📁 Explore health records</a>

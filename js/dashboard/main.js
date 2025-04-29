@@ -1,16 +1,63 @@
-import { startCarousel, applyChartStyle, prevChart, startManualCarousel } from './carousel.js';
+import { applyChartStyle, buildSingleChartCards, startAutoScroll, stopAutoScroll } from './carousel.js';
 import { updateMetricCards, setDatePickerLimits } from './metrics.js';
 import { getChartTypesForTile, formatChartLabel } from './utils.js';
 import { populateMlDogDropdown, populateFilterDogDropdown } from './ml.js';
+import { updateFilterState, setCarouselsEnabled, carouselsEnabled } from './config.js';
 
-// IM TIRED ASF MANE
-import {
-  updateFilterState,
-  setCarouselsEnabled,
-  carouselsEnabled,
-  carouselState,
-  carouselCharts
-} from './config.js';
+const allTiles = ['healthChart', 'vitalsChart', 'behaviourChart'];
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildSingleChartCards(); // build and draw charts on load
+
+  allTiles.forEach(tileId => {
+    const dropdown = document.getElementById(`${tileId}Type`);
+    const applyBtn = document.getElementById(`${tileId}ApplyBtn`);
+    const wrapper = document.getElementById(`${tileId}ScrollWrapper`);
+
+    if (dropdown) {
+      getChartTypesForTile(tileId).forEach(type => {
+        const opt = document.createElement('option');
+        opt.value = type;
+        opt.textContent = formatChartLabel(type);
+        dropdown.appendChild(opt);
+      });
+    }
+
+    if (applyBtn) {
+      applyBtn.addEventListener('click', () => applyChartStyle(tileId));
+    }
+
+    if (wrapper) {
+      wrapper.addEventListener('wheel', evt => {
+        if (evt.deltaY !== 0) {
+          evt.preventDefault();
+          wrapper.scrollBy({ left: evt.deltaY, behavior: 'smooth' });
+        }
+      });
+
+      if (carouselsEnabled) startAutoScroll(tileId);
+    }
+  });
+
+  updateMetricCards();
+  setDatePickerLimits('datePicker');
+  setDatePickerLimits('mlStart');
+  populateMlDogDropdown();
+  populateFilterDogDropdown();
+});
+
+document.getElementById('carouselToggle').addEventListener('change', e => {
+  const enabled = e.target.checked;
+  setCarouselsEnabled(enabled);
+
+  allTiles.forEach(tileId => {
+    if (enabled) {
+      startAutoScroll(tileId);
+    } else {
+      stopAutoScroll(tileId);
+    }
+  });
+});
 
 document.getElementById('carouselFilterForm').addEventListener('submit', e => {
   e.preventDefault();
@@ -23,79 +70,13 @@ document.getElementById('carouselFilterForm').addEventListener('submit', e => {
 
   updateFilterState({ dog, date, range, mode });
 
-  const allTiles = ['healthChart', 'vitalsChart', 'behaviourChart'];
-  const tiles = group === 'all' ? allTiles : [group];
-
-  allTiles.forEach(tileId => {
-    clearInterval(carouselState[tileId].interval);
-    carouselState[tileId].index = 0;
-  
-    if (tiles.includes(tileId)) {
-      startCarousel(tileId); // only selected group start immediatekly
-    } else {
-      if (carouselsEnabled && group === 'all') {
-        startCarousel(tileId);
-      }
-    }
-  });
-});
-
-document.getElementById('carouselToggle').addEventListener('change', e => {
-  const enabled = e.target.checked;
-  setCarouselsEnabled(enabled);
-
-  const group = document.getElementById('carouselCategory').value;
-  const tiles = group === 'all'
+  const groupsToUpdate = group === 'all'
     ? ['healthChart', 'vitalsChart', 'behaviourChart']
     : [group];
 
-  if (!enabled) {
-    tiles.forEach(tileId => clearInterval(carouselState[tileId].interval));
-  } else {
-    tiles.forEach(tileId => {
-      carouselState[tileId].index = 0;
-      startCarousel(tileId);
-    });
+  buildSingleChartCards(groupsToUpdate);
+
+  if (carouselsEnabled) {
+    groupsToUpdate.forEach(tileId => startAutoScroll(tileId));
   }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  ['healthChart', 'vitalsChart', 'behaviourChart'].forEach(tileId => {
-    startCarousel(tileId);
-    const applyBtn = document.getElementById(`${tileId}ApplyBtn`);
-    if (applyBtn) {
-      applyBtn.addEventListener('click', () => applyChartStyle(tileId));
-    }
-    const dropdown = document.getElementById(`${tileId}Type`);
-    if (dropdown) {
-      const types = getChartTypesForTile(tileId);
-      types.forEach(type => {
-        const opt = document.createElement('option');
-        opt.value = type;
-        opt.textContent = formatChartLabel(type);
-        dropdown.appendChild(opt);
-      });
-    }
-  });
-
-  document.querySelectorAll('[data-prev-tile]').forEach(btn => {
-    const tileId = btn.getAttribute('data-prev-tile');
-    btn.addEventListener('click', () => {
-      prevChart(tileId);
-    });
-  });
-  
-  document.querySelectorAll('[data-next-tile]').forEach(btn => {
-    const tileId = btn.getAttribute('data-next-tile');
-    btn.addEventListener('click', () => {
-      const nextIndex = (carouselState[tileId].index + 1) % carouselCharts[tileId].length;
-      startManualCarousel(tileId, nextIndex);
-    });
-  });
-
-  updateMetricCards();
-  setDatePickerLimits('datePicker');
-  setDatePickerLimits('mlStart');
-  populateMlDogDropdown();
-  populateFilterDogDropdown();
 });
