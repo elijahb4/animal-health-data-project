@@ -70,6 +70,16 @@ main {
   transform: scale(1.05);
 }
 
+.btn-secondary {
+  background-color: #e0e0e0;
+  color: #333;
+  font-weight: normal;
+}
+
+.btn-secondary:hover {
+  background-color: #d0d0d0;
+}
+
 /* CARD/TILE THEME IN DASHBOARD, FEEL FREE TO USE THIS WHEREVER YOU WANT. SIMPLE EFFECTIVE TILES FOR LAYOUT. */
 .card {
   background: #ffffff;

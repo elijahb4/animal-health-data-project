@@ -89,6 +89,7 @@
   justify-content: center;
   align-items: center;
   padding: 1rem 2.5rem;
+  overflow: hidden;
 }
 
 .chart-canvas-wrapper canvas {
@@ -104,8 +105,15 @@ canvas {
   max-height: 100%;
 }
 
-.chart-canvas-wrapper {
-  overflow: hidden;
+.chart-style-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.chart-style-select {
+  min-width: 180px;
 }
 
 /* ========== CAROUSEL BUTTONS ========== */
@@ -246,6 +254,9 @@ canvas {
   font-size: 0.9rem;
   color: #333;
 }
+
+/* dawg color picker layout */
+
 
 /* ========== PREDICTION TILE STUFF ========== */
 .prediction-tile {

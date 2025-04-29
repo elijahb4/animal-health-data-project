@@ -109,3 +109,51 @@ Traceback (most recent call last):
     from sklearn.linear_model import LinearRegression
 ModuleNotFoundError: No module named 'sklearn'
 
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-12-31" 7 2>&1
+OUTPUT:
+[{"date": "2023-12-31", "value": 46.79}, {"date": "2024-01-01", "value": 46.82}, {"date": "2024-01-02", "value": 46.85}, {"date": "2024-01-03", "value": 46.88}, {"date": "2024-01-04", "value": 46.91}, {"date": "2024-01-05", "value": 46.95}, {"date": "2024-01-06", "value": 46.98}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-12-31" 7 2>&1
+OUTPUT:
+[{"date": "2023-12-31", "value": 46.79}, {"date": "2024-01-01", "value": 46.82}, {"date": "2024-01-02", "value": 46.85}, {"date": "2024-01-03", "value": 46.88}, {"date": "2024-01-04", "value": 46.91}, {"date": "2024-01-05", "value": 46.95}, {"date": "2024-01-06", "value": 46.98}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-12-31" 7 2>&1
+OUTPUT:
+[{"date": "2023-12-31", "value": 46.79}, {"date": "2024-01-01", "value": 46.82}, {"date": "2024-01-02", "value": 46.85}, {"date": "2024-01-03", "value": 46.88}, {"date": "2024-01-04", "value": 46.91}, {"date": "2024-01-05", "value": 46.95}, {"date": "2024-01-06", "value": 46.98}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Food Intake (calories)" "2023-12-31" 7 2>&1
+OUTPUT:
+[{"date": "2023-12-31", "value": 137.75}, {"date": "2024-01-01", "value": 137.86}, {"date": "2024-01-02", "value": 137.98}, {"date": "2024-01-03", "value": 138.09}, {"date": "2024-01-04", "value": 138.2}, {"date": "2024-01-05", "value": 138.32}, {"date": "2024-01-06", "value": 138.43}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-12-31" 7 2>&1
+OUTPUT:
+[{"date": "2023-12-31", "value": 46.79}, {"date": "2024-01-01", "value": 46.82}, {"date": "2024-01-02", "value": 46.85}, {"date": "2024-01-03", "value": 46.88}, {"date": "2024-01-04", "value": 46.91}, {"date": "2024-01-05", "value": 46.95}, {"date": "2024-01-06", "value": 46.98}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-12-31" 3 2>&1
+OUTPUT:
+[{"date": "2023-12-31", "value": 46.79}, {"date": "2024-01-01", "value": 46.82}, {"date": "2024-01-02", "value": 46.85}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Heart Rate (bpm)" "2023-12-31" 1 2>&1
+OUTPUT:
+[{"date": "2023-12-31", "value": 131.54}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Heart Rate (bpm)" "2023-12-31" 3 2>&1
+OUTPUT:
+[{"date": "2023-12-31", "value": 131.54}, {"date": "2024-01-01", "value": 131.56}, {"date": "2024-01-02", "value": 131.58}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Heart Rate (bpm)" "2023-12-31" 7 2>&1
+OUTPUT:
+[{"date": "2023-12-31", "value": 131.54}, {"date": "2024-01-01", "value": 131.56}, {"date": "2024-01-02", "value": 131.58}, {"date": "2024-01-03", "value": 131.6}, {"date": "2024-01-04", "value": 131.62}, {"date": "2024-01-05", "value": 131.64}, {"date": "2024-01-06", "value": 131.66}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-12-31" 7 2>&1
+OUTPUT:
+[{"date": "2023-12-31", "value": 46.79}, {"date": "2024-01-01", "value": 46.82}, {"date": "2024-01-02", "value": 46.85}, {"date": "2024-01-03", "value": 46.88}, {"date": "2024-01-04", "value": 46.91}, {"date": "2024-01-05", "value": 46.95}, {"date": "2024-01-06", "value": 46.98}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-12-31" 7 2>&1
+OUTPUT:
+[{"date": "2023-12-31", "value": 46.79}, {"date": "2024-01-01", "value": 46.82}, {"date": "2024-01-02", "value": 46.85}, {"date": "2024-01-03", "value": 46.88}, {"date": "2024-01-04", "value": 46.91}, {"date": "2024-01-05", "value": 46.95}, {"date": "2024-01-06", "value": 46.98}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-12-31" 7 2>&1
+OUTPUT:
+[{"date": "2023-12-31", "value": 46.79}, {"date": "2024-01-01", "value": 46.82}, {"date": "2024-01-02", "value": 46.85}, {"date": "2024-01-03", "value": 46.88}, {"date": "2024-01-04", "value": 46.91}, {"date": "2024-01-05", "value": 46.95}, {"date": "2024-01-06", "value": 46.98}]
+

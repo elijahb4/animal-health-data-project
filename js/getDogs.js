@@ -12,6 +12,11 @@ zhr.onload = function () {
 
         const selectElement = document.getElementById('selectDog');
 
+        const allOption = document.createElement('option'); // ALL OPTION
+                allOption.value = 'ALL';
+                allOption.textContent = 'All Dogs';
+                selectElement.appendChild(allOption);
+
         response.forEach(dog => {
             const option = document.createElement('option');
             option.value = dog;

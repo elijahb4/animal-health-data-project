@@ -3,7 +3,7 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
 // get values from GET request
-$dogID = $_GET['DogID'] ?? '';
+$dogID = $_GET['DogID'] ?? 'ALL'; // ALL
 $columns = $_GET['columns'] ?? [];
 $date = $_GET['Date'] ?? '';
 
@@ -60,7 +60,7 @@ while (($row = fgetcsv($file, 0, ',', '"', '\\')) !== false) {
     list($day, $month, $year) = explode('-', $rowDateRaw);
     $rowTimestamp = strtotime("$year-$month-$day");
 
-    $matchesDog = ($rowDogId === $dogID);
+    $matchesDog = ($dogID === 'ALL' || $rowDogId === $dogID);
     $matchesDate = ($rowTimestamp >= $startTimestamp && $rowTimestamp < $endTimestamp);
 
     if ($matchesDog && $matchesDate) {
