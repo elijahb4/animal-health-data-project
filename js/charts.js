@@ -199,7 +199,7 @@ function queryData(event, minDate, maxDate) {
     event.preventDefault();
     const dogId = selectElement.value;
     const selectedDate = datePicker.value; // date thingy
-    const rangeDays = document.getElementById("rangeDays").value; // day range thingy
+    let rangeDays = parseInt(document.getElementById("rangeDays").value, 10);
     const endDate = addDaysToUTCDate(selectedDate, rangeDays);
     if (minDate > selectedDate || endDate > maxDate) {
         alert("Please select a date within the range provided.");

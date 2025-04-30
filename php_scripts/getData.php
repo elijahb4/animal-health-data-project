@@ -4,8 +4,8 @@ header('Content-Type: application/json');
 
 // get values from GET request
 $dogID = $_GET['DogID'] ?? 'ALL'; // ALL
-$columns = $_GET['columns'] ?? [];
 $date = $_GET['Date'] ?? '';
+$columns = $_GET['columns'] ?? [];
 
 if (!is_array($columns)) {
     $columns = [$columns]; // ensure its always an array
@@ -49,7 +49,6 @@ foreach ($columns as $column) {
 $rangeDays = isset($_GET['rangeDays']) ? intval($_GET['rangeDays']) : 1;
 $startTimestamp = strtotime($date);
 $endTimestamp = strtotime("+$rangeDays days", $startTimestamp);
-
 // filter data
 $data = [];
 while (($row = fgetcsv($file, 0, ',', '"', '\\')) !== false) {
