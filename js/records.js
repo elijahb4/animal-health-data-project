@@ -14,6 +14,7 @@ const downloadButtons = document.getElementById('download-button-container');
 //global event listeners
 queryForm.addEventListener("submit", queryData)
 
+//Invoked immediately to populate the get dogs select input
 async function getDogs () {
   try {
     const response = await fetch('/../php_scripts/getDogs.php');
@@ -262,7 +263,7 @@ function renderTable(data, sortColumn = null, sortDirection = 'asc') {
   });
   table.appendChild(tbody);
 
-  downloadButtons.innerHTML = `<button id="pdfButton">Download as PDF</button> <button id="pngButton">Download as PNG</button> <button id="jsonButton">Export data as JSON</button> <button id="csvButton">Export data as CSV</button>`;
+  downloadButtons.innerHTML = `<button class="btn" id="pdfButton">Download as PDF</button> <button class="btn" id="pngButton">Download as PNG</button> <button class="btn" id="jsonButton">Export data as JSON</button> <button class="btn" id="csvButton">Export data as CSV</button>`;
     const pdfButton = document.getElementById('pdfButton');
     const pngButton = document.getElementById('pngButton');
     const jsonButton = document.getElementById('jsonButton');

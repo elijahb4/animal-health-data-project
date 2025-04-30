@@ -33,14 +33,27 @@ expandButton.addEventListener('click', () => {
 
 //download chart as pdf
 async function makePDF() {
-    const { jsPDF } = window.jspdf;
+    const {jsPDF} = window.jspdf;
+    const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4'
+      });
     const chartCanvas = document.getElementById('myChart');
-    const imgData = chartCanvas.toDataURL('image/png');
+    const scale = 3;
+    
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = chartCanvas.width * scale;
+    tempCanvas.height = chartCanvas.height * scale;
 
-    const pdf = new jsPDF();
+    const pdfWidth = doc.internal.pageSize.getWidth();
+    const pdfHeight = doc.internal.pageSize.getHeight();
+    
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.scale(scale, scale);
+    tempCtx.drawImage(chartCanvas, 0, 0);
 
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const imgData = tempCanvas.toDataURL('image/png');
 
     const imgWidth = pdfWidth - 20;
     const imgHeight = (chartCanvas.height / chartCanvas.width) * imgWidth;
@@ -48,8 +61,8 @@ async function makePDF() {
     const x = 10;
     const y = (pdfHeight - imgHeight) / 2;
 
-    pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
-    pdf.save("chart.pdf");
+    doc.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+    doc.save("chart.pdf");
 }
 
 //download chart as bitmap
@@ -259,9 +272,8 @@ function makeChart(ctx, response, columns) {
     }
 
     const chartTypeValue = chartTypeSelect.value;
-    console.log("Selected Chart Type:", chartTypeValue);
+    const isPieLike = ['pie', 'doughnut'].includes(chartTypeValue);
 
-    // Predefined color palette - can be replaced with random color generation later
     const colorPalette = [
         'rgb(255, 99, 132)',
         'rgb(54, 162, 235)',
@@ -269,42 +281,88 @@ function makeChart(ctx, response, columns) {
         'rgb(75, 192, 192)',
         'rgb(153, 102, 255)',
         'rgb(255, 159, 64)',
-        'rgb(201, 203, 207)'
+        'rgb(5, 5, 5)'
     ];
 
-    let labels = response.map(item => item['Hour']); // Common x-axis labels
+    const getColor = index => colorPalette[index % colorPalette.length];
+    let labels = response.map(item => item['Hour']);
     let datasets = columns.map((column, index) => {
-        let data = [];
+    let data = [];
 
-        // Check if the column data is numeric or categorical
-        const isNumeric = response.every(item => !isNaN(parseFloat(item[column])));
-        if (!isNumeric) {
-            // Categorical Data
-            const counts = response.reduce((acc, item) => {
-                const value = item[column];
-                acc[value] = (acc[value] || 0) + 1;
-                return acc;
-            }, {});
+    if (isPieLike && columns.length === 1) {
+        const column = columns[0];
 
-            labels = Object.keys(counts);
-            data = Object.values(counts);
-        } else {
-            // Numeric Data
-            data = response.map(item => item[column]);
-        }
-
-        // Use color from palette, cycling through if more datasets than colors
-        const colorIndex = index % colorPalette.length;
+        const counts = response.reduce((acc, item) => {
+            const value = item[column];
+            acc[value] = (acc[value] || 0) + 1;
+            return acc;
+        }, {});
         
-        return {
-            label: `Data for ${column}`,
-            data: data,
-            backgroundColor: colorPalette[colorIndex],
-            borderColor: colorPalette[colorIndex],
-            borderWidth: 1,
-            fill: false
-        };
-    });
+        const labels = Object.keys(counts);
+        const data = Object.values(counts);
+        const backgroundColors = labels.map((_, i) => getColor(i));
+
+        myChart = new Chart(ctx, {
+            type: chartTypeValue,
+            data: {
+                labels,
+                datasets: [{
+                    data,
+                    backgroundColor: backgroundColors
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        return;
+    }
+
+    // Check if the column data is numeric or categorical
+    const isNumeric = response.every(item => !isNaN(parseFloat(item[column])));
+    if (!isNumeric) {
+        // Categorical Data
+        const categoryValues = [...new Set(response.map(item => item[column]))];
+
+        categoryValues.forEach((categoryValue, idx) => {
+            datasets.push({
+                label: `${column}: ${categoryValue}`,
+                data: response.map(item => item[column] === categoryValue ? 1 : 0),
+                yAxisID: 'y',
+                backgroundColor: getColor(idx),
+                borderColor: getColor(idx),
+                borderWidth: 1,
+                fill: !isLineChart
+            });
+        });
+
+        if (!yAxes['y']) {
+            yAxes['y'] = {
+                type: 'linear',
+                display: true,
+                position: 'left',
+                beginAtZero: true,
+                title: { display: true, text: 'Count' }
+            };
+        }
+    } else {
+        // Numeric Data
+        data = response.map(item => item[column]);
+    }
+
+    // Use color from palette, cycling through if more datasets than colors
+    const colorIndex = index % colorPalette.length;
+    
+    return {
+        label: `Data for ${column}`,
+        data: data,
+        backgroundColor: colorPalette[colorIndex],
+        borderColor: colorPalette[colorIndex],
+        borderWidth: 1,
+        fill: false
+    };
+});
 
     console.log("Chart Labels:", labels);
     console.log("Datasets:", datasets);
@@ -325,7 +383,7 @@ function makeChart(ctx, response, columns) {
         }
     });
 
-    downloadButtons.innerHTML = `<button id="pdfButton">Download as PDF</button> <button id="pngButton">Download as PNG</button> <button id="jsonButton">Export data as JSON</button> <button id="csvButton">Export data as CSV</button>`;
+    downloadButtons.innerHTML = `<button class="btn" id="pdfButton">Download as PDF</button> <button class="btn" id="pngButton">Download as PNG</button> <button class="btn" id="jsonButton">Export data as JSON</button> <button class="btn" id="csvButton">Export data as CSV</button>`;
     const pdfButton = document.getElementById('pdfButton');
     const pngButton = document.getElementById('pngButton');
     const jsonButton = document.getElementById('jsonButton');
