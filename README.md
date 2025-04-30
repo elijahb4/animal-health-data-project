@@ -49,7 +49,7 @@ Assuming all of the the prerequisites are fulfilled, follow the following steps 
 3. Start your web server
    - XAMPP provides a GUI control panel when you can start Apache to do this
    - For the PHP Developement server, naviagte to the directory containing the index.php file using your terminal (command prompt, bash, etc.) and run `php -S localhost:8000` - adjust the port number if that is necessary for you
-4. Open your web browser and type or paste [localhost](localhost) as the URL or 'localhost:<port_number>' (e.g. `localhost:8000`) if your server requires it (PHP's development server does)
+4. Open your web browser and type or paste [localhost](http://localhost) as the URL or 'localhost:<port_number>' (e.g. `localhost:8000`) if your server requires it (PHP's development server does)
 ---
 ## Features and how to use
 ### Dashboard Page
