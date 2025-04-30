@@ -10,7 +10,15 @@ zhr.onload = function () {
     try {
         response = JSON.parse(zhr.responseText);
 
-        const selectElement = document.getElementById('selectDog');
+        let selectElement;
+            if (document.getElementById('selectDog'))
+            {
+                selectElement = document.getElementById('selectDog');  // For dashboard page
+            }
+            else if (document.getElementById('selectDogRecords'))
+            {
+                selectElement = document.getElementById('selectDogRecords');  // For records page
+            }
 
         response.forEach(dog => {
             const option = document.createElement('option');
