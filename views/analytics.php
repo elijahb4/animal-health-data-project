@@ -24,7 +24,7 @@
             </div>
             <div class="form-group">
                 <label for="chartTypes">Chart Type:</label>
-                <select id="chartTypes" class="btn" required></select>
+                <select id="chartTypes" required></select>
             </div>
             <div class="form-group">
                 <label for="rangeDays">Number of Days:</label>

@@ -2,6 +2,7 @@
 - Presenting Animal Health Data Through a Web-Based Dashboard
 - A Sheffield Hallam University group project by Group 14-EXT for Elanco
 ## What this software does
+This is a web-based dashboard for visualising and analysing animal health data. This is intended to help users make better and more informed decisions with insights such as those made with scikit learn as well as through graphs and attention brought to unusual data. Additional features such as exporting data are also supported.
 
 ---
 ## How to run locally
@@ -53,7 +54,7 @@ Assuming all of the the prerequisites are fulfilled, follow the following steps 
 ---
 ## Features and how to use
 ### Dashboard Page
-
+The dashboard is the entry point to the website. It showcases a handful of graphs, split into 3 different categories which include Health, Vitals, and Behvaiour. These graphs are situated within sliding carousels which optionally and by default, auto rotate. The graphs can be filtered by specific chart categories, for plotting and showcasing different date ranges as seen in the csv, filter by specific dog IDs, including showcasing ALL dogs. Each chart group features a drop down for viewing different types of graphs. Because of the differing categorical nature of the Behavioural chart group, there are different chart viewing options. Additionally, the dashboard features dynamic metric cards which showcases averages across the board, with indicators to movement from previous day. These stats are taken from the latest date entry to behave dynamically.
 
 ### Analytics Page
 This page allows a user to generate any type of chart with data they select from the page (dog, datapoints, dates). You can hover over the chart for more details and you can export the chart as a PDF or a PNG - you can also export the data used to generate the chart in JSON or CSV format.
@@ -61,11 +62,8 @@ This page allows a user to generate any type of chart with data they select from
 ### Records Page
 This page allows a user to generate tables from the data tables with the data they select (dog, timeframe). The tables are rendered in browser and they can be exported as tables in a PDF or a PNG. The data from the tables can also be exported in JSON or CSV format.
 
-### Health Data Page
-
-
-### Trends Page
-
+### Health Trends Page
+This page is dedicated to machine learning forecasting using sci-kit learn machine learning models. The page features a chart generator with optional drop downs for various machine learning hyperparameter tweaking and data visualisation. Filters on this graph include training date range (this is 30 by default as seen in the Python), drop down for model selection (linear regression, polynomial, support vector regression, and random forest), training start date (limited to dynamic csv date ranges) and days to predict. Training day range will largely dictate the predictive data. The graph shows the predicted data, alongside training data as may be informative for users.
 
 ### Notifications
-These bring attention to data outside of normal rangesm such as high and low temperatures.
+These bring attention to data outside of normal ranges such as high and low temperatures.
