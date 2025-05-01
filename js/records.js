@@ -34,7 +34,7 @@ async function getDogs () {
 
 async function fetchDates() {
   try {
-      const response = await fetch('../php_scripts/getDates.php');
+      const response = await fetch('/../php_scripts/getDates.php');
       const data = await response.json();
       console.log("Min Date:", data.minDate, "Max Date:", data.maxDate);
       if (data.error) {
