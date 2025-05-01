@@ -1,5 +1,5 @@
 let currentData = [];
-const CSV_PATH = '../database/activityData.csv';
+const CSV_PATH = '/../database/activityData.csv';
 let minDate = null;
 let maxDate = null;
 
@@ -17,7 +17,7 @@ queryForm.addEventListener("submit", queryData)
 //Invoked immediately to populate the get dogs select input
 async function getDogs () {
   try {
-    const response = await fetch('../php_scripts/getDogs.php');
+    const response = await fetch('/../php_scripts/getDates.php');
     const data = await response.json();
     const selectElement = document.getElementById('selectDog');
     data.forEach(dog => {
