@@ -12,7 +12,7 @@ if (!is_array($columns)) {
 }
 
 // file path
-$csvPath = __DIR__ . '/../database/activityData.csv';
+$csvPath = __DIR__ . '../database/activityData.csv';
 
 if (!file_exists($csvPath)) {
     echo json_encode(['error' => 'CSV file not found']);
