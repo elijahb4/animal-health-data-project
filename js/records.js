@@ -14,6 +14,7 @@ const downloadButtons = document.getElementById('download-button-container');
 //global event listeners
 queryForm.addEventListener("submit", queryData)
 
+//Invoked immediately to populate the get dogs select input
 async function getDogs () {
   try {
     const response = await fetch('/../php_scripts/getDogs.php');
@@ -93,11 +94,30 @@ function makePDF() {
 
 //Export PNG
 function downloadBitmap() {
-  html2canvas(table).then(canvas => {
+  // clone container OUTSIDE BOUNDS omg no clip bakcrooms reference
+  const cloneContainer = document.createElement('div');
+  cloneContainer.style.position = 'absolute';
+  cloneContainer.style.top = '-9999px'; // out of sight out of mind
+  cloneContainer.style.left = '-9999px';
+  cloneContainer.style.width = 'auto';
+  cloneContainer.style.maxWidth = 'none'; // NECESSARY FO PERFECT PNG! requires full size for no squishy or misalignment issues
+  cloneContainer.style.background = 'white'; // white bg can be customized
+
+  const clonedTable = table.cloneNode(true);
+  clonedTable.style.width = 'auto'; // natural size!!! again same here
+  clonedTable.style.maxWidth = 'none'; 
+  cloneContainer.appendChild(clonedTable);
+
+  document.body.appendChild(cloneContainer); // add to DOM
+
+  html2canvas(cloneContainer, { scale: 2 }).then(canvas => {
       const link = document.createElement('a');
       link.href = canvas.toDataURL('image/png');
       link.download = 'table.png';
       link.click();
+
+      // Clean up
+      document.body.removeChild(cloneContainer);
   });
 }
 
@@ -243,7 +263,7 @@ function renderTable(data, sortColumn = null, sortDirection = 'asc') {
   });
   table.appendChild(tbody);
 
-  downloadButtons.innerHTML = `<button id="pdfButton">Download as PDF</button> <button id="pngButton">Download as PNG</button> <button id="jsonButton">Export data as JSON</button> <button id="csvButton">Export data as CSV</button>`;
+  downloadButtons.innerHTML = `<button class="btn" id="pdfButton">Download as PDF</button> <button class="btn" id="pngButton">Download as PNG</button> <button class="btn" id="jsonButton">Export data as JSON</button> <button class="btn" id="csvButton">Export data as CSV</button>`;
     const pdfButton = document.getElementById('pdfButton');
     const pngButton = document.getElementById('pngButton');
     const jsonButton = document.getElementById('jsonButton');

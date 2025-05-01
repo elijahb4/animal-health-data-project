@@ -46,7 +46,7 @@
 
 /* ========== METRICS BAR ========== */
 .metrics-bar {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   max-width: 1080px;
   display: flex;
   gap: 1.2rem;
@@ -56,7 +56,7 @@
 /* ========== CHART CARDS ========== */
 .chart-card {
   position: relative;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .chart-card canvas {
@@ -72,13 +72,13 @@
 .chart-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 1rem;
 }
 
 .chart-header h3 {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   margin: 0;
 }
 
@@ -89,6 +89,7 @@
   justify-content: center;
   align-items: center;
   padding: 1rem 2.5rem;
+  overflow: hidden;
 }
 
 .chart-canvas-wrapper canvas {
@@ -104,8 +105,15 @@ canvas {
   max-height: 100%;
 }
 
-.chart-canvas-wrapper {
-  overflow: hidden;
+.chart-style-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.chart-style-select {
+  min-width: 180px;
 }
 
 /* ========== CAROUSEL BUTTONS ========== */
@@ -174,7 +182,7 @@ canvas {
   gap: 1.5rem;
   text-align: left;
   padding: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .dog-highlight img {
@@ -192,7 +200,7 @@ canvas {
 
 /* ========== HEALTH PREVIEW ========== */
 .health-preview {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .health-preview ul {
@@ -229,8 +237,7 @@ canvas {
 
 /* ========== CHART FILTER STUFF  ========== */
 .interactive-filter {
-  margin-top: 0.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 #carouselFilterForm {
@@ -247,47 +254,37 @@ canvas {
   color: #333;
 }
 
-/* ========== PREDICTION TILE STUFF ========== */
-.prediction-tile {
-  border-radius: 16px;
-  padding: 2rem;
-}
-
-.prediction-header {
+/* SLIDEY TRAAACKS */
+.horizontal-scroll-wrapper {
+  scroll-snap-type: x mandatory;
   display: flex;
-  flex-direction: column;
-  margin-bottom: 1.5rem;
-}
-
-.prediction-header h3 {
-  font-size: 1.4rem;
-  margin: 0;
-}
-
-.prediction-header p {
-  font-size: 0.95rem;
-  color: #777;
-  margin-top: 0.25rem;
-}
-
-.prediction-form {
-  display: flex;
-  flex-wrap: wrap;
+  overflow-x: auto;
   gap: 1rem;
-  margin-bottom: 1.5rem;
-  align-items: flex-end;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
 }
 
-.prediction-form label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #444;
-  margin-bottom: 0.3rem;
-  display: block;
+.scroll-card {
+  flex: 0 0 100%;
+  min-width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: var(--card-shadow);
+  scroll-snap-align: start;
+  box-sizing: border-box;
 }
 
-#predictionChart {
-  width: 100% !important;
-  height: auto !important;
-  margin-top: 1rem;
+.chart-canvas {
+  width: 100%;
+  height: 300px;
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(100, 100, 100, 0.5);
+  border-radius: 4px;
 }

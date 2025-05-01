@@ -21,13 +21,7 @@
 }
 
 .sidebar .logo img.logo-icon {
-    height: 60px;
-    width: auto;
-    object-fit: contain;
-}
-
-.sidebar .logo img.logo-text {
-    height: 60px;
+    height: 80px;
     width: auto;
     object-fit: contain;
 }

@@ -2,8 +2,7 @@
 <link rel="stylesheet" href="css/sidebar.css">
 <div class="sidebar">
     <div class="logo">
-        <img src="assets/sidebar/health.png" class="logo-icon" alt="Veterinarian Icon">
-        <img src="assets/elanco-white.png" class="logo-text" alt="Elanco Logo">
+        <a href="https://elanco.com/" target="_blank"><img src="assets/elanco-white.png" alt="Elanco" class="logo-icon"></a>
     </div>
     <ul class="nav">
         <li class="<?= ($_GET['page'] ?? 'dashboard') == 'dashboard' ? 'active' : '' ?>">
@@ -18,11 +17,8 @@
         <li class="<?= ($_GET['page'] ?? '') == 'records' ? 'active' : '' ?>">
             <a href="index.php?page=records">Records</a>
         </li>
-        <li class="<?= ($_GET['page'] ?? '') == 'health-data' ? 'active' : '' ?>">
-            <a href="index.php?page=health-data">Health Data</a>
-        </li>
-        <li class="<?= ($_GET['page'] ?? '') == 'trends' ? 'active' : '' ?>">
-            <a href="index.php?page=trends">Trends</a>
+        <li class="<?= ($_GET['page'] ?? '') == 'health-trends' ? 'active' : '' ?>">
+            <a href="index.php?page=health-trends">Health Trends</a>
         </li>
     </ul>
     <ul class="settings-link">

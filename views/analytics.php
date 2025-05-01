@@ -38,13 +38,14 @@
             </form>
             </div>
             <br />
-            <div id="chart-container">
-                <div id="download-button-container">
+            <div id="download-button-container">
             </div>
+            <div id="chart-container">    
             <canvas id="myChart" width="400" height="400"></canvas>
             </div>
             <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
             <script src="../js/getDogs.js"></script>
             <script src="../js/charts.js"></script>
         </div>

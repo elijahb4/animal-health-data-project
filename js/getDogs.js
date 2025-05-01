@@ -20,6 +20,11 @@ zhr.onload = function () {
                 selectElement = document.getElementById('selectDogRecords');  // For records page
             }
 
+        const allOption = document.createElement('option'); // ALL OPTION
+                allOption.value = 'ALL';
+                allOption.textContent = 'All Dogs';
+                selectElement.appendChild(allOption);
+
         response.forEach(dog => {
             const option = document.createElement('option');
             option.value = dog;

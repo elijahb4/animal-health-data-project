@@ -3,11 +3,13 @@ $dog_id = $_POST['dogId'] ?? $_GET['dog_id'] ?? 'CANINE001';
 $metric = $_POST['metric'] ?? $_GET['metric'] ?? 'Calorie Burn';
 $start_date = $_POST['startDate'] ?? $_GET['start_date'] ?? date('Y-m-d');
 $days = $_POST['days'] ?? $_GET['days'] ?? 7;
+$trainingDays = isset($_POST['trainingDays']) ? intval($_POST['trainingDays']) : 30;
+$model = $_POST['model'] ?? $_GET['model'] ?? 'linear';
 
 $csv_path = '../database/activityData.csv';
 $script_path = '../python/ml_predictor.py';
 
-$command = "python \"$script_path\" \"$csv_path\" \"$dog_id\" \"$metric\" \"$start_date\" $days 2>&1";
+$command = "python \"$script_path\" \"$csv_path\" \"$dog_id\" \"$metric\" \"$start_date\" $days $trainingDays $model";
 
 // debug log
 file_put_contents('debug_log.txt', "COMMAND: $command\n", FILE_APPEND);
