@@ -2,9 +2,9 @@
 <link rel="stylesheet" href="css/header.css">
 <div class="header">
     <form class="search-bar" action="index.php?page=search_views" method="GET">
-        <button type="submit" class="search-button">
+        <a href="index.php?page=search_views"><button type="submit" class="search-button">
             <img src="assets/header/search.png" class="search-icon" alt="Search">
-        </button>
+        </button></a>
         <?php $query = $query ?? ''; ?>
         <input type="text" name="q" value="<?= htmlspecialchars($query) ?>" minlength="3" maxlength="20" placeholder="Search our records..." required>
     </form>

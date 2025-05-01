@@ -10,5 +10,5 @@ if ($query) {
     $results = json_decode($json, true) ?? [];
 }
 
-include __DIR__ . '/../views/search_views.php';
+include __DIR__ . '../views/search_views.php';
 ?>

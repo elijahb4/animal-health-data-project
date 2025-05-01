@@ -109,3 +109,11 @@ Traceback (most recent call last):
     from sklearn.linear_model import LinearRegression
 ModuleNotFoundError: No module named 'sklearn'
 
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-12-31" 7 2>&1
+OUTPUT:
+[{"date": "2023-12-31", "value": 46.79}, {"date": "2024-01-01", "value": 46.82}, {"date": "2024-01-02", "value": 46.85}, {"date": "2024-01-03", "value": 46.88}, {"date": "2024-01-04", "value": 46.91}, {"date": "2024-01-05", "value": 46.95}, {"date": "2024-01-06", "value": 46.98}]
+
+COMMAND: python "../python/ml_predictor.py" "../database/activityData.csv" "CANINE001" "Calorie Burn" "2023-12-01" 7 2>&1
+OUTPUT:
+[{"date": "2023-12-01", "value": 45.87}, {"date": "2023-12-02", "value": 45.9}, {"date": "2023-12-03", "value": 45.93}, {"date": "2023-12-04", "value": 45.96}, {"date": "2023-12-05", "value": 46.0}, {"date": "2023-12-06", "value": 46.03}, {"date": "2023-12-07", "value": 46.06}]
+

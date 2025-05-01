@@ -53,13 +53,13 @@ Assuming all of the the prerequisites are fulfilled, follow the following steps 
 ---
 ## Features and how to use
 ### Dashboard Page
-This is the home page, it shows a selection of difer
+
 
 ### Analytics Page
-
+This page allows a user to generate any type of chart with data they select from the page (dog, datapoints, dates). You can hover over the chart for more details and you can export the chart as a PDF or a PNG - you can also export the data used to generate the chart in JSON or CSV format.
 
 ### Records Page
-
+This page allows a user to generate tables from the data tables with the data they select (dog, timeframe). The tables are rendered in browser and they can be exported as tables in a PDF or a PNG. The data from the tables can also be exported in JSON or CSV format.
 
 ### Health Data Page
 
@@ -68,3 +68,4 @@ This is the home page, it shows a selection of difer
 
 
 ### Notifications
+These bring attention to data outside of normal rangesm such as high and low temperatures.
