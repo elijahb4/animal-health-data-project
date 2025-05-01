@@ -2,12 +2,12 @@
 header('Content-Type: application/json');
 header('Cache-Control: no-cache');
 
-if (!file_exists(__DIR__ . '/../database/activityData.csv')) {
+if (!file_exists(__DIR__ . '../database/activityData.csv')) {
     header('Content-Type: application/json');
     die(json_encode(['error' => 'CSV file not found']));
 }
 
-$file = fopen(__DIR__ . '/../database/activityData.csv', 'r');
+$file = fopen(__DIR__ . '../database/activityData.csv', 'r');
 if ($file === false) {
     header('Content-Type: application/json');
     die(json_encode(['error' => 'Unable to open file']));
