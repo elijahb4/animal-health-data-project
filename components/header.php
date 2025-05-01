@@ -1,11 +1,13 @@
 <link rel="stylesheet" href="css/global.css">
 <link rel="stylesheet" href="css/header.css">
 <div class="header">
-    <div class="search-bar">
-        <img src="assets/header/search.png" class="search-icon" alt="Search">
-        <input type="text" placeholder="Search our records...">
-    </div>
-
+    <form class="search-bar" action="index.php?page=search_views" method="GET">
+        <button type="submit" class="search-button">
+            <img src="assets/header/search.png" class="search-icon" alt="Search">
+        </button>
+        <?php $query = $query ?? ''; ?>
+        <input type="text" name="q" value="<?= htmlspecialchars($query) ?>" minlength="3" maxlength="20" placeholder="Search our records..." required>
+    </form>
     <div class="header-icons">
         <div class="icon-wrapper">
             <a href="index.php?page=notifications">

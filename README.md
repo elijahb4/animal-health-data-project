@@ -1,6 +1,6 @@
 # Animal Activity: Proof of Technology
-Presenting Animal Health Data Through a Web-Based Dashboard
-A Sheffield Hallam University group project by Group 14-EXT for Elanco
+- Presenting Animal Health Data Through a Web-Based Dashboard
+- A Sheffield Hallam University group project by Group 14-EXT for Elanco
 ## What this software does
 
 ---
@@ -53,7 +53,7 @@ Assuming all of the the prerequisites are fulfilled, follow the following steps 
 ---
 ## Features and how to use
 ### Dashboard Page
-
+This is the home page, it shows a selection of difer
 
 ### Analytics Page
 

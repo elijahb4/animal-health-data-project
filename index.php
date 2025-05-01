@@ -21,7 +21,7 @@
           'trends',
           'settings',
           'notifications',
-          'search',
+          'search_views',
         ];
 
         $page = $_GET['page'] ?? 'dashboard';
