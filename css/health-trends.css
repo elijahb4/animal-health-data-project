@@ -1,0 +1,45 @@
+/* ========== PREDICTION TILE STUFF ========== */
+.prediction-tile {
+    border-radius: 16px;
+    padding: 2rem;
+  }
+  
+  .prediction-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+  }
+  
+  .prediction-header h3 {
+    font-size: 1.4rem;
+    margin: 0;
+  }
+  
+  .prediction-header p {
+    font-size: 0.95rem;
+    color: #777;
+    margin-top: 0.25rem;
+  }
+  
+  .prediction-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: flex-end;
+  }
+  
+  .prediction-form label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+  
+  #predictionChart {
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 1rem;
+  }
+  

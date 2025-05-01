@@ -6,16 +6,23 @@ export function buildSingleChartCards(selectedGroups = ['healthChart', 'vitalsCh
     const scrollWrapper = document.getElementById(`${tileId}ScrollWrapper`);
     if (!scrollWrapper) return;
 
-    scrollWrapper.innerHTML = ''; // Clear old
+    scrollWrapper.innerHTML = ''; // clear old
 
     const chartList = carouselCharts[tileId];
     chartList.forEach((chart, i) => {
       const card = document.createElement('div');
       card.className = 'scroll-card';
+    
+      const title = document.createElement('h4');
+      title.textContent = chart.column;  // TITLES
+      title.className = 'chart-title';
+      card.appendChild(title);
+    
       const canvas = document.createElement('canvas');
       canvas.id = `${tileId}-canvas-${i}`;
       card.appendChild(canvas);
       scrollWrapper.appendChild(card);
+    
       fetchAndDrawChart(canvas, chart.column, currentChartTypes[tileId], chartRegistry);
     });
   });

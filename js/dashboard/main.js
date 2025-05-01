@@ -1,7 +1,7 @@
 import { applyChartStyle, buildSingleChartCards, startAutoScroll, stopAutoScroll } from './carousel.js';
 import { updateMetricCards, setDatePickerLimits } from './metrics.js';
 import { getChartTypesForTile, formatChartLabel } from './utils.js';
-import { populateMlDogDropdown, populateFilterDogDropdown } from './ml.js';
+import { populateFilterDogDropdown } from './ml.js';
 import { updateFilterState, setCarouselsEnabled, carouselsEnabled } from './config.js';
 
 const allTiles = ['healthChart', 'vitalsChart', 'behaviourChart'];
@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
   updateMetricCards();
   setDatePickerLimits('datePicker');
   setDatePickerLimits('mlStart');
-  populateMlDogDropdown();
   populateFilterDogDropdown();
 });
 
