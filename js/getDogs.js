@@ -1,6 +1,6 @@
 let zhr = new XMLHttpRequest();
 
-zhr.open('GET', '../php_scripts/getDogs.php', true); // absolute works ig?
+zhr.open('GET', 'php_scripts/getDogs.php', true); // absolute works ig?
 zhr.setRequestHeader('Accept', '../application/json');
 
 zhr.onload = function () {
